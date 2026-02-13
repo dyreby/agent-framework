@@ -37,10 +37,6 @@ The kernel follows a functional core / imperative shell architecture.
 **Core** layers are declarative, composable, and job-independent.
 **Shell** wires up the core for a specific job.
 
-Profiles don't override the core — they orchestrate it.
-
-Conflicts resolve top-down: Truths inform Values inform Roles inform Skills.
-
 *Note: The full architecture will be documented in a separate ADR once this RFC is accepted.*
 
 ## Proposal
@@ -74,7 +70,7 @@ The model responds to two types of data: external and internal.
 
 **T-3: Model Fallibility**
 
-An agent's model is a simplification of reality, necessarily incomplete. All models are wrong; some are useful.
+An agent's model is a simplification of reality and necessarily incomplete. All models are wrong; some are useful.
 
 **T-4: Action Consequences**
 
