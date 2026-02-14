@@ -95,6 +95,10 @@ Truth layer changes require:
 
 This reflects the foundational nature of the layer.
 
+This RFC establishes v0.1.0 of the kernel.
+The 0.x series allows iteration while the foundation is built.
+Version 1.0.0 will be declared once all core layers are stable.
+
 ## References
 
 - Future RFCs will propose Values, Roles, Skills, and Profiles layers.
