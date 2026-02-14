@@ -50,10 +50,9 @@ Location: `docs/rfcs/`
 
 RFCs propose significant changes:
 
-- Truth or Value layer modifications
-- Structural changes to Roles, Skills, or Profiles
+- Foundation or core changes
 - Governance process changes
-- New adapter contracts
+- New tool integrations
 
 Routine additions to Roles, Skills, and Profiles can go through regular PRs.
 
@@ -102,7 +101,7 @@ The goal is clarity at the appropriate level, not uniform tone.
 ## Versioning
 
 This project uses semantic versioning.
-The mapping of version increments to framework layers will be defined via RFC once the layer model is accepted.
+The mapping of version increments to the framework structure will be defined via RFC once the structure is stable.
 
 ## Platform
 

@@ -32,25 +32,40 @@ You try to stay aligned with what matters while the world shifts around you.
 
 So does everyone else. So does every AI.
 
-This model helps you navigate the uncertainty. You can see what's real versus what's your thinking. You can act with intention instead of drifting. You can let go of what isn't true.
+This model helps you navigate the uncertainty.
+You can see what's real versus what's your thinking.
+You can act with intention instead of drifting.
+You can let go of what isn't true.
 
-When working with others, sharing a framework is more important than agreeing on everything. A shared framework makes collaboration more effective because it frames discussions around alignment. Are we disagreeing about what matters, or just about how to do it? Shared foundations make the work light.
+When working with others, sharing a framework is more important than agreeing on everything.
+A shared framework makes collaboration more effective because it frames discussions around alignment.
+Are we disagreeing about what matters, or just about how to do it?
+Shared foundations make the work light.
 
 ## What's the goal?
 
 I want AI agents that think and work the way I do.
 
-This project is how I'm doing it. My theory is that the more an agent aligns with how I think, from Truths down to preferences, the more effectively we can collaborate.
+This project is how I'm doing it.
+My theory is that the more an agent aligns with how I think, from Truths down to preferences, the more effectively we can collaborate.
 
-The framework is durable. The model I build on it is mine. The artifacts that implement it for tools like pi can evolve with the technology without affecting either.
+The framework is durable.
+The model I build on it is mine.
+The artifacts that implement it for my current tools can evolve with the technology without affecting either.
 
 ## How this project works
 
-This project is the test. I'm developing it with AI agents as collaborators, using the same channels: issues, pull requests, reviews.
+This project is the test of that theory.
+I'm developing it with my current agent, based on [pi](https://github.com/mariozechner/pi-coding-agent), as a collaborator using software development best practices.
 
-Human or AI, the process is the same.
+Along the way, I help my agent do its job better.
+As it improves, the work gets better and iteration gets faster.
+I participate where I add the most value.
 
-As the project evolves, the agents improve. Better agents mean better work and faster iteration. I participate along the way where I think I add the most value.
+Eventually, the agent just does what I ask.
+And I have a better understanding of what's reasonable to ask.
+
+Until then, any misalignment is either a bug to fix or a lesson to learn.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
