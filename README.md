@@ -1,62 +1,71 @@
 # Agent Framework
 
-A behavioral foundation for agents — artificial, human, or hybrid.
+A framework for acting in an uncertain world.
 
 ## What is this?
 
-This is my attempt to codify structural principles for how agents should operate: how to handle uncertainty, make decisions, and stay aligned with goals.
-It's a model — all models are wrong, but some are useful.
-I think this one is useful for both artificial and human agents.
+This is my attempt to model agency: what it means to act in an uncertain world, how to handle ambiguity, make decisions, and stay aligned with what matters.
+It turns out the same principles work whether you're a person or an AI.
+I use the term "agent" for both.
 
-Truths are structural properties of agents operating in the world.
-Values are principles I believe lead to better outcomes.
-Everything else is built on that foundation.
+This framework is a model — all models are wrong, but some are useful.
+I find this one useful.
 
-The framework is a layered architecture:
+To understand and effectively use a model, you need to know what it's built on.
+Truths are the foundation: premises and their logical consequences, invariants about agents operating in the world.
 
-- **Truths** — Structural properties of agents. What they are, not what they should do.
-- **Values** — Guiding principles for decisions when tradeoffs exist.
+Everything beyond that is my model:
+
+- **Principles** — What I believe leads to better outcomes.
 - **Roles** — Goal-oriented perspectives (like "advisor", "coder", or "reviewer").
 - **Skills** — Procedures and techniques for getting things done.
 - **Profiles** — Job-specific wiring: which role, which skills, for what purpose.
 
-The first four layers are the core: the foundation that shapes everything else.
+Principles, Roles, and Skills are the core.
 Profiles are the shell: how you wire up the core for a specific job.
-
-These principles apply to any agent (human or AI).
-If something only works for one, it doesn't belong here.
 
 ## Why does this matter?
 
-AI tools are getting powerful enough to do real work.
-But "let the AI handle it" isn't a strategy — it's abdication.
+You act with incomplete information.
+You make decisions under uncertainty.
+You try to stay aligned with what matters while the world shifts around you.
 
-The alternative isn't micromanagement.
-It's **attention allocation**.
+So does everyone else. So does every AI.
 
-When you collaborate with someone you trust, you don't watch their every move.
-You check in at the level that matters: a quick summary, a review, a conversation when something seems off.
-You can always go deeper if needed, and it's ok if some days you have more to give than others.
+This model helps you navigate the uncertainty.
+You can see what's real versus what's your thinking.
+You can act with intention instead of drifting.
+You can let go of what isn't true.
 
-This kind of collaboration requires:
+When working with others, sharing a framework is more important than agreeing on everything.
+A shared framework makes collaboration more effective because it frames discussions around alignment.
+Are we disagreeing about what matters, or just about how to do it?
+Shared foundations make the work light.
 
-- Shared principles that don't require constant negotiation
-- Alignment on what we're trying to achieve
-- Clear interfaces for proposing, reviewing, and taking action towards the goal
-- The ability to engage at any depth — from quick approval to thorough review
+## What's the goal?
 
-The Agent Framework provides the shared principles. The process provides the rest.
+I want AI agents that think and work the way I do.
 
-Because ultimately, principles and process drive quality, not the actor.
-And that's as true for life as it is for software.
+This project is how I'm doing it.
+My theory is that the more an agent aligns with how I think, from Truths down to preferences, the more effectively we can collaborate.
+
+The framework is durable.
+The model I build on it is mine.
+The artifacts that implement it for my current tools can evolve with the technology without affecting either.
 
 ## How this project works
 
-This repository is developed using its own principles and contains everything you need to contribute.
-Contributors (human or artificial agent) participate through the same channels: issues, pull requests, reviews.
-Your name on something means you stand behind it.
+This project is the test of that theory.
+I'm developing it with my current agent, based on [pi](https://github.com/mariozechner/pi-coding-agent), as a collaborator using software development best practices.
 
-We use GitHub, but the principles apply to any platform with version control, issue tracking, and code review.
+Along the way, I help my agent do its job better.
+As it improves, the work gets better and iteration gets faster.
+I participate where I add the most value.
+
+Eventually, the agent just does what I ask.
+And I have a better understanding of what's reasonable to ask.
+
+Until then, any misalignment is either a bug to fix or a lesson to learn.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
