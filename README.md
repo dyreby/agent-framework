@@ -8,16 +8,16 @@ This is my attempt to codify structural principles for how agents should operate
 It's a model — all models are wrong, but some are useful.
 I think this one is useful for both agents and humans.
 
-Truths are structural constraints hard to argue with.
+Truths are structural properties of agents operating in the world.
 Values are principles I believe lead to better outcomes.
 Everything else is built on that foundation.
 
 The kernel is a layered architecture:
 
-- **Truths** — Constraints that can't be overridden. The non-negotiables.
+- **Truths** — Structural properties of agents. What they are, not what they should do.
 - **Values** — Guiding principles for decisions when tradeoffs exist.
 - **Roles** — Goal-oriented perspectives (like "advisor", "coder", or "reviewer").
-- **Skills** — Procedures and preferences for getting things done.
+- **Skills** — Procedures and techniques for getting things done.
 - **Profiles** — Job-specific wiring: which role, which skills, for what purpose.
 
 The first four layers are the core: the foundation that shapes everything else.
