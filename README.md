@@ -1,4 +1,4 @@
-# Agent Kernel
+# Agent Framework
 
 A behavioral foundation for agents — artificial, human, or hybrid.
 
@@ -12,7 +12,7 @@ Truths are structural properties of agents operating in the world.
 Values are principles I believe lead to better outcomes.
 Everything else is built on that foundation.
 
-The kernel is a layered architecture:
+The framework is a layered architecture:
 
 - **Truths** — Structural properties of agents. What they are, not what they should do.
 - **Values** — Guiding principles for decisions when tradeoffs exist.
@@ -45,7 +45,7 @@ This kind of collaboration requires:
 - Clear interfaces for proposing, reviewing, and taking action towards the goal
 - The ability to engage at any depth — from quick approval to thorough review
 
-The Agent Kernel provides the shared principles. The process provides the rest.
+The Agent Framework provides the shared principles. The process provides the rest.
 
 Because ultimately, principles and process drive quality, not the actor.
 And that's as true for life as it is for software.

@@ -1,6 +1,6 @@
 # Contributing
 
-This document defines the collaboration model and governance process for the Agent Kernel project.
+This document defines the collaboration model and governance process for the Agent Framework project.
 
 ## A Note on Contributions
 
@@ -102,7 +102,7 @@ The goal is clarity at the appropriate level, not uniform tone.
 ## Versioning
 
 This project uses semantic versioning.
-The mapping of version increments to kernel layers will be defined via RFC once the layer model is accepted.
+The mapping of version increments to framework layers will be defined via RFC once the layer model is accepted.
 
 ## Platform
 
