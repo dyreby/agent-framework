@@ -15,7 +15,7 @@ Agents (human or artificial) operate under fundamental structural properties:
 
 - They are capable of acting based on indeterminate world models
 - Their actions have effects on the world and on themselves
-- Their models respond to data from the world and from themselves
+- Their models respond to input from the world and from themselves
 - Their models are simplifications and necessarily incomplete
 
 These aren't preferences or guidelines.
@@ -32,7 +32,7 @@ The kernel follows a functional core / imperative shell architecture.
 | Truths | Core | Describe — structural properties of agents operating in the world |
 | Values | Core | Guide — principles for operating given those properties |
 | Roles | Core | Optimize — goal-oriented perspectives |
-| Skills | Core | Execute — procedures and preferences for getting things done |
+| Skills | Core | Execute — procedures and techniques for getting things done |
 | Profiles | Shell | Wire — select and configure the core for a specific job |
 
 **Core** layers are declarative, composable, and job-independent.
@@ -65,27 +65,23 @@ Truths are not:
 
 An agent is an entity capable of acting based on an indeterminate world model.
 
-**T-2: Action Consequences**
+**T-2: Action Consequence**
 
 Actions have effects on the world and the agent.
 
-**T-3: Data Duality**
+**T-3: Input Duality**
 
-The model responds to data from the world and the agent.
+The model responds to input from the world and the agent.
 
 **T-4: Model Fallibility**
 
 An agent's model is a simplification of the world and necessarily incomplete. All models are wrong; some are useful.
 
-### Applicability
-
-These truths apply to human and artificial agents alike.
-
 ### Deferred to Values Layer
 
 The following principles were considered but are prescriptive rather than structural. They belong in the Values layer as guidance for operating given the Truths:
 
-- **Data Integrity**: Data from the world must not be conflated with data from the agent. (Derived from T-3)
+- **Input Integrity**: Input from the world must not be conflated with input from the agent. (Derived from T-3, T-4)
 - **Confidence Calibration**: Confidence must scale with available support and stakes. (Derived from T-4)
 - **Rigor Scales with Stakes**: As potential impact increases, rigor, verification, and caution must increase proportionally. (Derived from T-2, T-4)
 - **Objective Alignment**: Optimization must remain aligned with explicit goals and constraints.
