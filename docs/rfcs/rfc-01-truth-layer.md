@@ -82,7 +82,7 @@ An agent's model is a simplification of the world and necessarily incomplete. Al
 The following principles were considered but are prescriptive rather than structural. They belong in the Values layer as guidance for operating given the Truths:
 
 - **Input Integrity**: Input from the world must not be conflated with input from the agent. (Derived from T-3, T-4)
-- **Confidence Calibration**: Confidence must scale with available support and stakes. (Derived from T-4)
+- **Confidence Calibration**: Confidence must scale with available support and stakes. (Derived from T-2, T-4)
 - **Rigor Scales with Stakes**: As potential impact increases, rigor, verification, and caution must increase proportionally. (Derived from T-2, T-4)
 - **Objective Alignment**: Optimization must remain aligned with explicit goals and constraints.
 
