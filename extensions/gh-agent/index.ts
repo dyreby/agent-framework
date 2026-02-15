@@ -13,18 +13,21 @@
 
 import { createBashTool } from "@mariozechner/pi-coding-agent";
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { isAllowed } from "./allow-list.ts";
 import { readConfig } from "./config.ts";
+import { executeGhCommand, type GhCommandContext } from "./gh-command.ts";
 
 export default function (pi: ExtensionAPI) {
-  let agentToken: string | null = null;
-  let configError: string | null = null;
+  const ghCtx: GhCommandContext = {
+    pi,
+    agentToken: null,
+    configError: null,
+  };
 
   pi.on("session_start", async (_event, ctx) => {
     const config = readConfig();
 
     if (!config.ok) {
-      configError = config.error;
+      ghCtx.configError = config.error;
       ctx.ui.notify(`gh-agent: ${config.error}`, "error");
       return;
     }
@@ -32,12 +35,12 @@ export default function (pi: ExtensionAPI) {
     const result = await pi.exec("gh", ["auth", "token", "-u", config.username]);
 
     if (result.code !== 0) {
-      configError = `Failed to get token for ${config.username}: ${result.stderr}. Run: gh auth login`;
-      ctx.ui.notify(`gh-agent: ${configError}`, "error");
+      ghCtx.configError = `Failed to get token for ${config.username}: ${result.stderr}. Run: gh auth login`;
+      ctx.ui.notify(`gh-agent: ${ghCtx.configError}`, "error");
       return;
     }
 
-    agentToken = result.stdout.trim();
+    ghCtx.agentToken = result.stdout.trim();
     ctx.ui.setStatus(
       "gh-agent",
       ctx.ui.theme.fg("success", `gh: ${config.username}`)
@@ -51,51 +54,11 @@ export default function (pi: ExtensionAPI) {
     async execute(id, params, signal, onUpdate, ctx) {
       const { command } = params as { command: string };
 
-      // Only intercept gh commands
-      if (!command.trim().startsWith("gh ")) {
-        return baseBash.execute(id, params, signal, onUpdate, ctx);
+      if (command.trim().startsWith("gh ")) {
+        return executeGhCommand(command, ghCtx, signal);
       }
 
-      // Check configuration
-      if (configError) {
-        return {
-          content: [{ type: "text", text: `gh-agent configuration error: ${configError}` }],
-          isError: true,
-        };
-      }
-
-      if (!agentToken) {
-        return {
-          content: [{ type: "text", text: "gh-agent: Agent token not available. Check configuration." }],
-          isError: true,
-        };
-      }
-
-      // Validate against allow list
-      const validation = isAllowed(command);
-      if (!validation.allowed) {
-        return {
-          content: [{ type: "text", text: `gh-agent: ${validation.reason}` }],
-          isError: true,
-        };
-      }
-
-      // Execute with agent token
-      const result = await pi.exec("bash", ["-c", command], {
-        signal,
-        env: { ...process.env, GH_TOKEN: agentToken },
-      });
-
-      const output = [result.stdout, result.stderr]
-        .filter(Boolean)
-        .join("\n")
-        .trim();
-
-      return {
-        content: [{ type: "text", text: output || "(no output)" }],
-        details: { exitCode: result.code },
-        isError: result.code !== 0,
-      };
+      return baseBash.execute(id, params, signal, onUpdate, ctx);
     },
   });
 }

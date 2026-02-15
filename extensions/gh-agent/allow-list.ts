@@ -1,7 +1,7 @@
 /**
  * Allow list validation for gh commands.
  *
- * Whitelist approach: only explicitly allowed commands pass.
+ * Only explicitly allowed commands pass.
  * Everything else is blocked, including dangerous operations.
  */
 
