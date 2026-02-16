@@ -30,6 +30,8 @@ const ALLOWED_COMMANDS = [
 
 /** Allowed API endpoint patterns (supports * wildcards for single path segments) */
 const ALLOWED_API_PATTERNS = [
+  // List PR review comments
+  "repos/*/*/pulls/*/comments",
   // Reply to inline PR comments
   "repos/*/*/pulls/*/comments/*/replies",
   // Edit issue comments

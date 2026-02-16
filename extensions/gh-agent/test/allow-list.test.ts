@@ -123,6 +123,11 @@ describe("isAllowed", () => {
   });
 
   describe("API commands", () => {
+    it("allows listing PR review comments (GET)", () => {
+      const result = isAllowed("gh api repos/owner/repo/pulls/1/comments");
+      assert.strictEqual(result.allowed, true);
+    });
+
     it("allows replying to inline PR comments (POST)", () => {
       const result = isAllowed(
         'gh api repos/owner/repo/pulls/1/comments/123/replies -X POST -f body="Reply"'
