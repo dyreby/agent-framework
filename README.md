@@ -11,19 +11,15 @@ I find this one useful, and I think it can help an AI agent be more useful to me
 
 ## What's the goal?
 
-My lived experience is that when working with others, sharing a framework is more important than agreeing on everything.
-When you're not aligned, the best use of time is finding where you actually disagree and talking on that level.
-A shared model of what should be done, how it should be done, and who will do it makes the work light.
+In my lived experience, sharing a framework matters more than sharing conclusions.
+A shared model of what to do, how to do it, and who does what makes the work light.
 
-I want an AI agent that thinks and works the way I do — because I want my work to be as light as it can be.
+I want an AI agent that works the way I do — so my work can be as light as possible.
 
-Despite being an imperfect model of the collective sum of human knowledge to date, LLMs are already useful.
-That's enough to start building with.
+LLMs are imperfect, but useful enough to start building with today.
+As they improve, the bottleneck shifts to alignment: making sure the agent understands what I actually want.
 
-I also think that better and better LLMs will be developed, and it's exciting to think about a world where they are capable enough that my only concern is aligning on exactly what I want done.
-
-The goal of this project is to establish a shared understanding for how that alignment process could look and what pieces are involved.
-In practice, that means system context and skills I can give a coding agent to make it work the way I do.
+This project establishes that shared understanding — truths, principles, and skills I can give a coding agent to make it work the way I do.
 
 ## How I think about agency
 
