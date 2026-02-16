@@ -22,6 +22,10 @@ const ALLOWED_COMMANDS = [
   "pr diff",
   "pr review",
   "pr edit",
+  "pr status",
+
+  // Search
+  "search prs",
 ] as const;
 
 /** Allowed API endpoint patterns (supports * wildcards for single path segments) */

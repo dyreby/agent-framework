@@ -63,6 +63,16 @@ describe("isAllowed", () => {
       const result = isAllowed("gh pr edit 123 --body 'Updated'");
       assert.strictEqual(result.allowed, true);
     });
+
+    it("allows pr status", () => {
+      const result = isAllowed("gh pr status");
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("allows search prs", () => {
+      const result = isAllowed("gh search prs --review-requested=john-agent --state=open");
+      assert.strictEqual(result.allowed, true);
+    });
   });
 
   describe("blocked commands (dangerous)", () => {
