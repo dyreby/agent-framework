@@ -4,7 +4,6 @@
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { isAllowed } from "./allow-list.ts";
-import { SETUP_COMMAND } from "./config.ts";
 
 export interface GhCommandContext {
   pi: ExtensionAPI;
