@@ -78,7 +78,7 @@ export function isAllowed(command: string): ValidationResult {
 
   return {
     allowed: false,
-    reason: `Command not allowed: ${cmdSubcmd}`,
+    reason: `Command not allowed: ${cmdSubcmd}. Do not attempt workarounds—inform the user this action requires manual execution.`,
   };
 }
 
@@ -97,7 +97,7 @@ function validateApiCommand(args: string[]): ValidationResult {
   if (!matchedPattern) {
     return {
       allowed: false,
-      reason: `API endpoint not allowed: ${endpoint}`,
+      reason: `API endpoint not allowed: ${endpoint}. Do not attempt workarounds—inform the user this action requires manual execution.`,
     };
   }
 
@@ -108,7 +108,7 @@ function validateApiCommand(args: string[]): ValidationResult {
   if (!allowedMethods.includes(method)) {
     return {
       allowed: false,
-      reason: `Method ${method} not allowed for ${endpoint}. Allowed: ${allowedMethods.join(", ")}`,
+      reason: `Method ${method} not allowed for ${endpoint}. Allowed: ${allowedMethods.join(", ")}. Do not attempt workarounds—inform the user this action requires manual execution.`,
     };
   }
 
