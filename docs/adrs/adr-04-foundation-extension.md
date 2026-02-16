@@ -1,6 +1,6 @@
 # ADR-04: Foundation Extension
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-02-16
 - **RFC:** [RFC-04](../rfcs/rfc-04-foundation-extension.md)
 - **Extends:** ADR-03 (Foundation Revision)
@@ -77,7 +77,6 @@ These are now structural consequences within the framework.
 
 ## Consequences
 
-- Framework version increments to v0.3.0
 - Foundation encoded as five Truths: T-1 through T-5
 - Presuppositions remain unchanged (P-0 through P-4, not encoded)
 - ADR-03 remains as historical record; this ADR captures current state

@@ -1,6 +1,6 @@
 # RFC-04: Foundation Extension
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Created:** 2026-02-15
 - **Extends:** RFC-03 (Foundation Revision)
 
@@ -148,7 +148,6 @@ T-3 immediately after T-2 connects objectives to models. T-4 establishes epistem
 
 - This RFC extends RFC-03 (not supersedes — the original truths remain)
 - ADR-04 will reference this RFC
-- Version increments to v0.3.0
 
 ## References
 
