@@ -39,9 +39,10 @@ From there, I can state truths that apply to me and an LLM-based agent alike:
 
 - Agents act from internal objectives.
 - Agents have internal world models that are incomplete, fallible, and mutable.
-- More complex models require more input.
 - Agents use their world models to select actions in pursuit of objectives.
 - World input and model-derived conclusions are distinct. World input is taken as given.
+- The context users provide fills the gap between what the agent understands and what the task needs.
+- Expressed intent is lossy. Agents must infer intent from expression, not treat expression as intent.
 
 Built on that foundation is a model I find useful for thinking about how to get things done.
 
