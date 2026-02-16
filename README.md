@@ -7,18 +7,20 @@ A framework for agents whose models are always wrong.
 This is my attempt to model agency: what it means to have objectives, work with imperfect information, and stay aligned with what matters.
 
 This framework is a model — all models are wrong, but some are useful.
-I find this one useful. And I think it can help an AI agent be more useful to me also.
+I find this one useful, and I think it can help an AI agent be more useful to me.
 
 ## What's the goal?
 
 My lived experience is that when working with others, sharing a framework is more important than agreeing on everything.
 When you're not aligned, the best use of time is finding where you actually disagree and talking on that level.
-Because a shared model of what should be done, how it should be done, and who will do it makes the work light.
+A shared model of what should be done, how it should be done, and who will do it makes the work light.
 
 I want an AI agent that thinks and works the way I do — because I want my work to be as light as it can be.
 
 Despite being an imperfect model of the collective sum of human knowledge to date, LLMs are already useful.
-I also think that better and better LLMs will be developed, and it's exciting to think about a world where they are capable enough such that my only concern is aligning on exactly what I want done.
+That's enough to start building with.
+
+I also think that better and better LLMs will be developed, and it's exciting to think about a world where they are capable enough that my only concern is aligning on exactly what I want done.
 
 The goal of this project is to establish a shared understanding for how that alignment process could look and what pieces are involved.
 In practice, that means system context and skills I can give a coding agent to make it work the way I do.
@@ -60,11 +62,11 @@ I'm developing this with my current agent, based on [pi](https://github.com/badl
 
 Along the way, I will help my agent do its job better.
 As it improves, the work gets better and iteration gets faster.
-I participate where I add the most value, which will evolve along with agent.
+I participate where I add the most value, which will evolve along with the agent.
 
 The hope is that eventually the agent just does what I ask, and I know what's worth asking.
 
-Until then, any misalignment is either a bug to fix my agent or a lesson to learn for me.
+Until then, any misalignment is either a bug to fix in my agent or a lesson for me to learn.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
