@@ -175,9 +175,8 @@ The *source* of objectives and models differs, but the structural properties are
 
 ## Migration
 
-- RFC-01 status updated to "Superseded by RFC-03"
-- ADR-01 remains valid (records original decision)
-- New ADR-03 records this revision decision
+- This RFC supersedes RFC-01 (declared in header)
+- ADR-03 supersedes ADR-01 (declared in its header)
 - Version increments to v0.2.0
 
 ## References
