@@ -1,71 +1,69 @@
 # Agent Framework
 
-A framework for acting in an uncertain world.
+A framework for agents whose models are always wrong.
 
 ## What is this?
 
-This is my attempt to model agency: what it means to act in an uncertain world, how to handle ambiguity, make decisions, and stay aligned with what matters.
-It turns out the same principles work whether you're a person or an AI.
-I use the term "agent" for both.
+This is my attempt to model agency: what it means to have objectives, work with imperfect information, and stay aligned with what matters.
 
 This framework is a model — all models are wrong, but some are useful.
-I find this one useful.
-
-To understand and effectively use a model, you need to know what it's built on.
-Truths are the foundation: premises and their logical consequences, invariants about agents operating in the world.
-
-Everything beyond that is my model:
-
-- **Principles** — What I believe leads to better outcomes.
-- **Roles** — Goal-oriented perspectives (like "advisor", "coder", or "reviewer").
-- **Skills** — Procedures and techniques for getting things done.
-- **Profiles** — Job-specific wiring: which role, which skills, for what purpose.
-
-Principles, Roles, and Skills are the core.
-Profiles are the shell: how you wire up the core for a specific job.
-
-## Why does this matter?
-
-You act with incomplete information.
-You make decisions under uncertainty.
-You try to stay aligned with what matters while the world shifts around you.
-
-So does everyone else. So does every AI.
-
-This model helps you navigate the uncertainty.
-You can see what's real versus what's your thinking.
-You can act with intention instead of drifting.
-You can let go of what isn't true.
-
-When working with others, sharing a framework is more important than agreeing on everything.
-A shared framework makes collaboration more effective because it frames discussions around alignment.
-Are we disagreeing about what matters, or just about how to do it?
-A shared model of what should be done and how to do it makes the work light.
+I find this one useful. And I think it can help an AI agent be more useful to me also.
 
 ## What's the goal?
 
-I want AI agents that think and work the way I do.
+My lived experience is that when working with others, sharing a framework is more important than agreeing on everything.
+When you're not aligned, the best use of time is finding where you actually disagree and talking on that level.
+Because a shared model of what should be done, how it should be done, and who will do it makes the work light.
 
-This project is how I'm doing it.
-My theory is that the more an agent aligns with how I think, from Truths down to preferences, the more effectively we can collaborate.
+I want an AI agent that thinks and works the way I do — because I want my work to be as light as it can be.
+Despite being an imperfect model of the collective sum of human knowledge to date, LLMs are already useful.
+I also think that better and better LLMs will be developed, and it's exciting to think about a world where they are capable enough such that my only concern is aligning on exactly what I want done.
 
-The framework is durable.
-The model I build on it is mine.
-The artifacts that implement it for my current tools can evolve with the technology without affecting either.
+The goal of this project is to establish a shared understanding for how that alignment process could look and what pieces are involved.
+In practice, that means system context and skills I can give a coding agent to make it work the way I do.
 
-## How this project works
+## How I think about agency
 
-This project is the test of that theory.
-I'm developing it with my current agent, based on [pi](https://github.com/mariozechner/pi-coding-agent), as a collaborator using software development best practices.
+Here's how I model agency based on a foundation of shared truths and a practical framework.
 
-Along the way, I help my agent do its job better.
+Some things I take for granted — presuppositions that aren't worth encoding because they're obvious or definitional:
+- Something exists.
+- Distinct things exist (you and me, agent and world).
+- Physics is consistent at the scale we operate.
+- An agent is an entity capable of acting in the world.
+
+From there, I can state truths that apply to me and an LLM-based agent alike:
+
+- Agents act from internal objectives.
+- Agents have internal world models that are incomplete, fallible, and mutable.
+- More complex models require more input.
+- Agents use their world models to select actions in pursuit of objectives.
+- World input and model-derived conclusions are distinct. World input is taken as given.
+
+Built on that foundation is a model I find useful for thinking about how to get things done.
+
+- Principles — what I believe leads to better outcomes
+- Roles — goal-oriented perspectives (like "advisor", "coder", or "reviewer")
+- Skills — procedures and techniques for getting things done
+- Profiles — how you wire roles, skills, and principles for a specific job
+
+In software terms, Principles, Roles, and Skills are the core.
+Profiles are the shell: how you wire up the core for a specific job.
+
+Aligning at this level shapes the constraints the model works within.
+Get the foundation right, and alignment on specifics gets easier downstream.
+
+## How I'm building this
+
+I'm developing this with my current agent, based on [pi](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent), as a collaborator, treating it like any other codebase.
+
+Along the way, I will help my agent do its job better.
 As it improves, the work gets better and iteration gets faster.
-I participate where I add the most value.
+I participate where I add the most value, which will evolve along with agent.
 
-Eventually, the agent just does what I ask.
-And I have a better understanding of what's reasonable to ask.
+The hope is that eventually the agent just does what I ask, and I know what's worth asking.
 
-Until then, any misalignment is either a bug to fix or a lesson to learn.
+Until then, any misalignment is either a bug to fix my agent or a lesson to learn for me.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
