@@ -12,7 +12,7 @@ I find this one useful, and I think it can help an AI agent be more useful to me
 ## What's the goal?
 
 In my lived experience, sharing a framework matters more than sharing conclusions.
-A shared model of what to do, how to do it, and who does what makes the work light.
+Aligning on a shared model of what to do, how to do it, and who does what makes the work light.
 
 I want an AI agent that works the way I do — so my work can be as light as possible.
 
