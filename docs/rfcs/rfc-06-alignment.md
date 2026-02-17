@@ -293,6 +293,21 @@ All artifacts are freeform markdown files in a flat directory. The filename is t
 
 All artifacts are versioned, diffable, auditable.
 
+### Profile Provenance
+
+Profiles include minimal frontmatter for provenance:
+
+```markdown
+---
+model: claude-sonnet-4-20250514
+generated: 2026-02-17
+---
+
+[profile content]
+```
+
+This makes profiles self-contained—no git archaeology needed to know when and how they were generated. The metadata is included in context when the profile is loaded, which can be useful when iterating on profiles.
+
 ## Epistemological Stance
 
 This framework is **useful, not true**.
