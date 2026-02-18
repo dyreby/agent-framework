@@ -3,12 +3,16 @@
  *
  * Checks if the user is at a clean consistency boundary before session transitions.
  *
- * Currently handles /new:
+ * Handles:
+ * - /new: Intercepts new session, checks boundary first
+ * - /quit: Exit pi with boundary check (use instead of Ctrl+C for the guardrail)
+ *
+ * For each:
  * 1. Gathers concrete state (git status, open PRs, pending reviews)
  * 2. Asks the LLM to assess if we're at a clean boundary
  * 3. Presents the assessment and lets the user decide
  *
- * Could extend to /resume, /fork, exit — any transition where
+ * Could extend to /resume, /fork — any transition where
  * "are we at a clean stopping point?" matters.
  */
 
@@ -16,9 +20,14 @@ import { complete, type Message } from "@mariozechner/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@mariozechner/pi-coding-agent";
 import { BorderedLoader, serializeConversation, convertToLlm, type SessionEntry } from "@mariozechner/pi-coding-agent";
 
-const ASSESSMENT_PROMPT = `You are assessing whether it's a good time to start a fresh session.
+function getAssessmentPrompt(action: "new session" | "exit"): string {
+  const actionDesc = action === "new session" 
+    ? "start a new session" 
+    : "exit pi";
+  
+  return `You are assessing whether it's a good time to ${actionDesc}.
 
-The user wants to start a new session. Before proceeding, evaluate whether they're at a clean consistency boundary.
+The user wants to ${actionDesc}. Before proceeding, evaluate whether they're at a clean consistency boundary.
 
 Consider:
 - Uncommitted changes (provided below)
@@ -26,10 +35,11 @@ Consider:
 - Any implicit understanding you've built up during this conversation that would be lost
 
 Based on the state provided, give a brief assessment:
-- If it's clean: say "Clean boundary. Safe to start fresh."
+- If it's clean: say "Clean boundary. Safe to proceed."
 - If there are concerns: list them specifically and concisely (e.g., "You have uncommitted changes in X" or "PR #42 has unaddressed review comments")
 
 Be direct. No preamble. Just the assessment.`;
+}
 
 async function gatherState(pi: ExtensionAPI): Promise<{ gitStatus: string; openPRs: string }> {
   // Check git status
@@ -65,7 +75,8 @@ async function getAssessment(
   pi: ExtensionAPI,
   ctx: ExtensionContext,
   state: { gitStatus: string; openPRs: string },
-  conversationSummary: string
+  conversationSummary: string,
+  action: "new session" | "exit"
 ): Promise<string | null> {
   if (!ctx.model) {
     return "No model available for assessment.";
@@ -101,7 +112,7 @@ Is this a clean consistency boundary? If not, what are the specific concerns?`
 
       const response = await complete(
         ctx.model!,
-        { systemPrompt: ASSESSMENT_PROMPT, messages: [userMessage] },
+        { systemPrompt: getAssessmentPrompt(action), messages: [userMessage] },
         { apiKey, signal: loader.signal }
       );
 
@@ -166,7 +177,7 @@ export default function (pi: ExtensionAPI) {
     }
 
     // Get LLM assessment
-    const assessment = await getAssessment(pi, ctx, state, conversationSummary);
+    const assessment = await getAssessment(pi, ctx, state, conversationSummary, "new session");
 
     if (assessment === null) {
       // User cancelled during assessment
@@ -196,5 +207,59 @@ export default function (pi: ExtensionAPI) {
     }
 
     // User chose to proceed despite concerns
+  });
+
+  // /quit command - boundary-checked exit
+  pi.registerCommand("quit", {
+    description: "Exit pi with consistency boundary check",
+    handler: async (_args, ctx) => {
+      if (!ctx.hasUI) {
+        ctx.shutdown();
+        return;
+      }
+
+      // Gather state
+      const state = await gatherState(pi);
+      const conversationSummary = getConversationSummary(ctx);
+
+      // Quick check: if obviously clean, just exit
+      const isObviouslyClean =
+        state.gitStatus === "No uncommitted changes." &&
+        (state.openPRs === "No open PRs." || state.openPRs.includes("Unable to check"));
+
+      if (isObviouslyClean && conversationSummary === "") {
+        ctx.shutdown();
+        return;
+      }
+
+      // Get LLM assessment
+      const assessment = await getAssessment(pi, ctx, state, conversationSummary, "exit");
+
+      if (assessment === null) {
+        ctx.ui.notify("Cancelled", "info");
+        return;
+      }
+
+      // Check if assessment indicates clean boundary
+      const isClean = assessment.toLowerCase().includes("clean boundary") ||
+                      assessment.toLowerCase().includes("safe to proceed");
+
+      if (isClean) {
+        ctx.shutdown();
+        return;
+      }
+
+      // Not clean - show assessment and ask for confirmation
+      const proceed = await ctx.ui.confirm(
+        "Consistency boundary check",
+        `${assessment}\n\nExit anyway?`
+      );
+
+      if (proceed) {
+        ctx.shutdown();
+      } else {
+        ctx.ui.notify("Staying in session.", "info");
+      }
+    },
   });
 }
