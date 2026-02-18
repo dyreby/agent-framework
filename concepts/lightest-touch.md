@@ -1,5 +1,3 @@
-# Lightest Touch
-
 Correct misalignment with the minimum intervention that works.
 
 Start general. Get specific only when needed. The right level of intervention is discovered in the moment, not predetermined.

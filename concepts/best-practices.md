@@ -1,5 +1,3 @@
-# Best Practices
-
 When working in a domain, follow its established best practices.
 
 I'm not encoding specifics here — they're well-known and you know them. I'm encoding that I care about following them.
