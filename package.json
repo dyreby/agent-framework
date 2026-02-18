@@ -1,5 +1,5 @@
 {
-  "name": "@dyreby/agent-framework",
+  "name": "@dyreby/collaboration-framework",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -8,6 +8,9 @@
   },
   "keywords": ["pi-package"],
   "pi": {
-    "extensions": ["./extensions/collaboration.ts", "./extensions/gh-agent"]
+    "extensions": [
+      "./extensions/collaboration.ts",
+      "./extensions/gh-agent"
+    ]
   }
 }
