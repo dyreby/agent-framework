@@ -5,7 +5,7 @@
  *
  * Handles:
  * - /new: Intercepts new session, checks boundary first
- * - /quit: Exit pi with boundary check (use instead of Ctrl+C for the guardrail)
+ * - /bye: Exit pi with boundary check (use instead of Ctrl+C for the guardrail)
  *
  * For each:
  * 1. Gathers concrete state (git status, open PRs, pending reviews)
@@ -209,8 +209,8 @@ export default function (pi: ExtensionAPI) {
     // User chose to proceed despite concerns
   });
 
-  // /quit command - boundary-checked exit
-  pi.registerCommand("quit", {
+  // /bye command - boundary-checked exit
+  pi.registerCommand("bye", {
     description: "Exit pi with consistency boundary check",
     handler: async (_args, ctx) => {
       if (!ctx.hasUI) {
@@ -251,7 +251,7 @@ export default function (pi: ExtensionAPI) {
 
       // Not clean - show assessment and ask for confirmation
       const proceed = await ctx.ui.confirm(
-        "Consistency boundary check",
+        "Before you go...",
         `${assessment}\n\nExit anyway?`
       );
 
