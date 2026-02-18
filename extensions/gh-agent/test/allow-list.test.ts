@@ -73,26 +73,36 @@ describe("isAllowed", () => {
       const result = isAllowed("gh search prs --review-requested=john-agent --state=open");
       assert.strictEqual(result.allowed, true);
     });
+
+    it("allows issue close", () => {
+      const result = isAllowed("gh issue close 123");
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("allows issue reopen", () => {
+      const result = isAllowed("gh issue reopen 123");
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("allows pr close", () => {
+      const result = isAllowed("gh pr close 123");
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("allows pr reopen", () => {
+      const result = isAllowed("gh pr reopen 123");
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("allows pr merge", () => {
+      const result = isAllowed("gh pr merge 123");
+      assert.strictEqual(result.allowed, true);
+    });
   });
 
   describe("blocked commands (dangerous)", () => {
     it("blocks repo delete", () => {
       const result = isAllowed("gh repo delete owner/repo --yes");
-      assert.strictEqual(result.allowed, false);
-    });
-
-    it("blocks pr merge", () => {
-      const result = isAllowed("gh pr merge 123");
-      assert.strictEqual(result.allowed, false);
-    });
-
-    it("blocks pr close", () => {
-      const result = isAllowed("gh pr close 123");
-      assert.strictEqual(result.allowed, false);
-    });
-
-    it("blocks issue close", () => {
-      const result = isAllowed("gh issue close 123");
       assert.strictEqual(result.allowed, false);
     });
 

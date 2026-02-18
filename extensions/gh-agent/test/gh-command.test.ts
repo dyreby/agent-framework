@@ -85,7 +85,7 @@ describe("validateGhCommands", () => {
   });
 
   it("blocks if any gh command is invalid", () => {
-    const result = validateGhCommands("gh pr list && gh pr merge 1");
+    const result = validateGhCommands("gh pr list && gh repo delete owner/repo");
     assert.strictEqual(result.allowed, false);
   });
 
