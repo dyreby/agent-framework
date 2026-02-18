@@ -71,7 +71,7 @@ A preamble explains the philosophy, syntax, and collaboration protocol:
 <collaboration-framework>
 Models are only as good as the shared understanding of the concepts behind them.
 
-This context uses concepts from github.com/dyreby/collaboration-framework. When you see [[cf:foo]], that's a reference to concepts/foo.md, marking shared understanding for how that concept applies here. Misalignment means your interpretation differs from the user's or the source concept. On misalignment: read the source and align with the user. If the user now understands, continue. If the concept needs refinement, file a PR or issue in the concept's repo. If proceeding without alignment, assess whether the gap is minor or fundamental and advise the user of the risk.
+This context uses concepts from github.com/dyreby/collaboration-framework. When you see [[cf:choose-kindness]], that's a reference to concepts/choose-kindness.md, marking shared understanding for how that concept applies here. Misalignment means your interpretation differs from the user's or the source concept. On misalignment: read the source and align with the user. If the user now understands, continue. If the concept needs refinement, file a PR or issue in the concept's repo. If proceeding without alignment, assess whether the gap is minor or fundamental and advise the user of the risk.
 </collaboration-framework>
 ```
 
