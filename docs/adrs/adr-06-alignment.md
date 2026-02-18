@@ -11,9 +11,9 @@ ADR-05 established T-6: expressed intent is lossy. Agents must infer intent from
 
 But T-6 raises a question: *how* should agents infer intent?
 
-Previous approaches used layered abstractions—principles, skills, guidelines—that the agent interprets at runtime. This is fundamentally indeterminate. The same words can be synthesized differently across invocations, models, or contexts.
+Previous approaches used layered abstractions (principles, skills, guidelines) that the agent interprets at runtime. This is fundamentally indeterminate. The same words can be synthesized differently across invocations, models, or contexts.
 
-Meanwhile, a key invariant exists: **the human is the only authority who can verify that the observed result of an action matches their original intention.** This is irreducible—intent originates in the human, expression is lossy, and only the human can close the loop.
+Meanwhile, a key invariant exists: **the human is the only authority who can verify that the observed result of an action matches their original intention.** This is irreducible: intent originates in the human, expression is lossy, and only the human can close the loop.
 
 If human verification is always required, we don't need perfect runtime interpretation. We need shared understanding before action, deterministic application, and feedback mechanisms.
 
@@ -78,7 +78,7 @@ generated: 2026-02-17
 
 ### Runtime Behavior
 
-Users load profiles. The agent receives committed profile text and treats it as shared understanding—deterministic lookup, not runtime interpretation.
+Users load profiles. The agent receives committed profile text and treats it as shared understanding: deterministic lookup, not runtime interpretation.
 
 ```bash
 pi --profile code-reviewer
@@ -94,7 +94,7 @@ Concepts capture what matters. What isn't mentioned has no preference.
 
 If a concept specifies "focus on correctness and maintainability" but says nothing about formatting, that's signal: formatting isn't something you care about. The collaborator (human or agent) can use their judgment.
 
-This makes the vocabulary tractable—you only encode what you'd push back on if it went differently. Silence is permission to proceed as the collaborator sees fit.
+This makes the vocabulary tractable: you only encode what you'd push back on if it went differently. Silence is permission to proceed as the collaborator sees fit.
 
 ### Epistemological Stance
 
@@ -105,7 +105,7 @@ The shared invariant:
 - Users can't know if what was written is missing context
 - Even the author doesn't know if they encoded their intent correctly
 
-This isn't a flaw—it's the nature of collaboration under T-6. The framework makes it legible and workable—and every collaboration, whether human-to-agent or human-to-human, is a data point for refining alignment.
+This isn't a flaw; it's the nature of collaboration under T-6. The framework makes it legible and workable—and every collaboration, whether human-to-agent or human-to-human, is a data point for refining alignment.
 
 ## Consequences
 
