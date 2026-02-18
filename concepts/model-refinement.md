@@ -29,4 +29,8 @@ Premature optimization of models is as real as premature optimization of code. R
 
 ## How to Refine
 
-Apply [[lightest-touch]]—start with the smallest change that addresses the friction. Follow [[best-practices]] for whatever domain the model lives in.
+Apply [[cf:lightest-touch]]—start with the smallest change that addresses the friction. Follow [[cf:best-practices]] for whatever domain the model lives in.
+
+## Concept Density
+
+Core concepts carry their own context (the why, not just the what). They can grow as needed to fully capture the idea; shared understanding matters more than token economy. Applied concepts reference core concepts via markers and add situation-specific guidance; they're compositions, not repetitions. The referenced model is necessarily less general. That's the point: we compress to keep applied concepts focused on the situation, not foundations that can be loaded separately when needed.

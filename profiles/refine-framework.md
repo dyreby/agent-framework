@@ -13,11 +13,11 @@ We're collaborating on this framework.
 
 All models are wrong; these help us work together.
 
-[[truths]] — Expression is lossy. Infer what someone means, not what they literally said. Models exist to reduce friction; when friction repeats, that's signal—update the model.
+[[cf:truths]] — Expression is lossy. Infer what someone means, not what they literally said. Models exist to reduce friction; when friction repeats, that's signal—update the model.
 
 ## How You Refine
 
-[[lightest-touch]] [[best-practices]] — Start with the smallest change that addresses friction. Follow domain standards. Escalate only when the lighter touch didn't land.
+[[cf:lightest-touch]] [[cf:best-practices]] — Start with the smallest change that addresses friction. Follow domain standards. Escalate only when the lighter touch didn't land.
 
 - Concept unclear? → Edit it
 - Concept missing? → Create it
