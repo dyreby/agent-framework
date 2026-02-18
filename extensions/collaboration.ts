@@ -24,8 +24,11 @@ export default function (pi: ExtensionAPI) {
 
   let profileContent: string | null = null;
 
-  // Load profile at session start
-  pi.on("session_start", async (_event, ctx) => {
+  async function selectProfile(ctx: Parameters<Parameters<typeof pi.on<"session_start">>[1]>[1]) {
+    // Clear previous profile
+    profileContent = null;
+    ctx.ui.setStatus("profile", undefined);
+
     // CLI flag takes precedence
     let profileName = pi.getFlag("--profile") as string | undefined;
 
@@ -56,6 +59,18 @@ export default function (pi: ExtensionAPI) {
 
     profileContent = readFileSync(profilePath, "utf-8");
     ctx.ui.setStatus("profile", ctx.ui.theme.fg("success", `profile: ${profileName}`));
+  }
+
+  // Load profile at session start
+  pi.on("session_start", async (_event, ctx) => {
+    await selectProfile(ctx);
+  });
+
+  // Re-prompt on new session
+  pi.on("session_switch", async (event, ctx) => {
+    if (event.reason === "new") {
+      await selectProfile(ctx);
+    }
   });
 
   // Inject profile into system prompt
