@@ -26,3 +26,7 @@ The structure is the same: observe, notice friction, decide if it's signal, refi
 You stop when the model stops failing in ways you care about. "Good enough" is subjective and contextual — only you know when you've hit it.
 
 Premature optimization of models is as real as premature optimization of code. Refine when friction demands it, not before.
+
+## How to Refine
+
+Apply [[lightest-touch]]—start with the smallest change that addresses the friction. Follow [[best-practices]] for whatever domain the model lives in.
