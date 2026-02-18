@@ -1,102 +1,107 @@
 /**
  * Collaboration framework extension.
- * 
- * - --profile <name>: Load a profile into the system prompt at session start
- * - get_model tool: Returns current model identifier for profile provenance
+ *
+ * - /concept: Toggle concepts on/off via fuzzy picker
+ * - Injects preamble + active concepts into system prompt
+ * - Shows active concepts in status bar
  */
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Type } from "@sinclair/typebox";
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 
-// Find profiles directory relative to this extension
+// Find concepts directory relative to this extension
 const extensionDir = dirname(import.meta.url.replace("file://", ""));
 const repoRoot = join(extensionDir, "..");
-const profilesDir = join(repoRoot, "profiles");
+const conceptsDir = join(repoRoot, "concepts");
+
+const PREAMBLE = `<collaboration-framework>
+This context uses concepts from the collaboration framework. When you see [[cf:name]], that references concepts/name.md—shared understanding for how that concept applies here.
+
+On misalignment: read the source concept and align with the user. If the concept needs refinement, propose changes.
+</collaboration-framework>`;
 
 export default function (pi: ExtensionAPI) {
-  // Register --profile flag
-  pi.registerFlag("profile", {
-    description: "Load a collaboration profile into the system prompt",
-    type: "string",
-  });
+  const activeConcepts = new Set<string>();
 
-  let profileContent: string | null = null;
-
-  async function selectProfile(ctx: Parameters<Parameters<typeof pi.on<"session_start">>[1]>[1]) {
-    // Clear previous profile
-    profileContent = null;
-    ctx.ui.setStatus("profile", undefined);
-
-    // CLI flag takes precedence
-    let profileName = pi.getFlag("--profile") as string | undefined;
-
-    // Otherwise, prompt for selection if profiles exist
-    if (!profileName && ctx.hasUI) {
-      const profiles = readdirSync(profilesDir)
+  function getAvailableConcepts(): string[] {
+    try {
+      return readdirSync(conceptsDir)
         .filter((f) => f.endsWith(".md"))
         .map((f) => f.replace(/\.md$/, ""));
+    } catch {
+      return [];
+    }
+  }
 
-      if (profiles.length === 0) return;
+  function updateStatus(ctx: { ui: { setStatus: (id: string, text: string | undefined) => void; theme: { fg: (color: string, text: string) => string } } }) {
+    if (activeConcepts.size === 0) {
+      ctx.ui.setStatus("concepts", undefined);
+    } else {
+      const names = [...activeConcepts].sort().join(", ");
+      ctx.ui.setStatus("concepts", ctx.ui.theme.fg("success", `concepts: ${names}`));
+    }
+  }
 
-      if (profiles.length === 1) {
-        profileName = profiles[0];
+  // /concept command - toggle concepts on/off
+  pi.registerCommand("concept", {
+    description: "Toggle concepts on/off",
+    handler: async (_args, ctx) => {
+      const available = getAvailableConcepts();
+      if (available.length === 0) {
+        ctx.ui.notify("No concepts found in concepts/", "error");
+        return;
+      }
+
+      // Build options with active state indicator
+      const options = available.map((name) => {
+        const active = activeConcepts.has(name);
+        return `${active ? "● " : "○ "}${name}`;
+      });
+
+      const selected = await ctx.ui.select("Toggle concept:", options);
+      if (!selected) return;
+
+      // Extract name (remove indicator prefix)
+      const name = selected.slice(2);
+
+      if (activeConcepts.has(name)) {
+        activeConcepts.delete(name);
+        ctx.ui.notify(`Deactivated: ${name}`, "info");
       } else {
-        const selected = await ctx.ui.select("Select profile:", ["(none)", ...profiles]);
-        if (!selected || selected === "(none)") return;
-        profileName = selected;
+        activeConcepts.add(name);
+        ctx.ui.notify(`Activated: ${name}`, "info");
+      }
+
+      updateStatus(ctx);
+    },
+  });
+
+  // Inject preamble + active concepts into system prompt
+  pi.on("before_agent_start", async (event, ctx) => {
+    if (activeConcepts.size === 0) return;
+
+    const conceptContents: string[] = [];
+    for (const name of activeConcepts) {
+      try {
+        const content = readFileSync(join(conceptsDir, `${name}.md`), "utf-8");
+        conceptContents.push(`## ${name}\n\n${content}`);
+      } catch (e) {
+        ctx.ui.notify(`Failed to read concept: ${name}`, "error");
       }
     }
 
-    if (!profileName) return;
+    if (conceptContents.length === 0) return;
 
-    const profilePath = join(profilesDir, `${profileName}.md`);
-    if (!existsSync(profilePath)) {
-      ctx.ui.notify(`Profile not found: ${profilePath}`, "error");
-      return;
-    }
-
-    profileContent = readFileSync(profilePath, "utf-8");
-    ctx.ui.setStatus("profile", ctx.ui.theme.fg("success", `profile: ${profileName}`));
-  }
-
-  // Load profile at session start
-  pi.on("session_start", async (_event, ctx) => {
-    await selectProfile(ctx);
-  });
-
-  // Re-prompt on new session
-  pi.on("session_switch", async (event, ctx) => {
-    if (event.reason === "new") {
-      await selectProfile(ctx);
-    }
-  });
-
-  // Inject profile into system prompt
-  pi.on("before_agent_start", async (event, _ctx) => {
-    if (!profileContent) return;
+    const injection = `${PREAMBLE}\n\n# Active Concepts\n\n${conceptContents.join("\n\n---\n\n")}`;
 
     return {
-      systemPrompt: event.systemPrompt + "\n\n" + profileContent,
+      systemPrompt: event.systemPrompt + "\n\n" + injection,
     };
   });
 
-  // Tool to get model info for profile generation
-  pi.registerTool({
-    name: "get_model",
-    label: "Get Model",
-    description: "Returns the current model identifier for profile provenance frontmatter",
-    parameters: Type.Object({}),
-    async execute(_toolCallId, _params, _signal, _onUpdate, ctx) {
-      const model = ctx.model;
-      const id = `${model.provider}/${model.id}`;
-      const timestamp = new Date().toISOString().split("T")[0];
-
-      return {
-        content: [{ type: "text", text: `model: ${id}\ngenerated: ${timestamp}` }],
-        details: { provider: model.provider, id: model.id, timestamp },
-      };
-    },
+  // Restore status on session start (concepts don't persist, but status should be clear)
+  pi.on("session_start", async (_event, ctx) => {
+    updateStatus(ctx);
   });
 }
