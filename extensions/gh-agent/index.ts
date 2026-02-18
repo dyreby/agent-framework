@@ -9,6 +9,8 @@
  *   1. Add to ~/.pi/agent/settings.json:
  *      { "gh-agent": { "username": "your-github-agent-username" } }
  *   2. Run: GH_CONFIG_DIR=~/.pi/agent/gh-config/{username} gh auth login
+ *
+ * If not configured, the extension stays dormant (no tool override).
  */
 
 import { createBashTool } from "@mariozechner/pi-coding-agent";
@@ -17,29 +19,28 @@ import { readConfig, getSetupCommand } from "./config.ts";
 import { executeGhCommand, containsGhCommand, type GhCommandContext } from "./gh-command.ts";
 
 export default function (pi: ExtensionAPI) {
+  // Check config at load time - if not configured, skip everything
+  const config = readConfig();
+
+  if (!config.ok) {
+    // Not configured - stay dormant, no tool override
+    // User can check docs if they want to enable it
+    return;
+  }
+
   const ghCtx: GhCommandContext = {
     pi,
-    configDir: "",
+    configDir: config.configDir,
     configError: null,
   };
 
   pi.on("session_start", async (_event, ctx) => {
-    const config = readConfig();
-
-    if (!config.ok) {
-      ghCtx.configError = config.error;
-      ctx.ui.notify(`gh-agent: ${config.error}`, "error");
-      return;
-    }
-
-    ghCtx.configDir = config.configDir;
-
     // Verify auth is configured in isolated config dir
     const result = await pi.exec("env", [`GH_CONFIG_DIR=${config.configDir}`, "gh", "auth", "status"]);
 
     if (result.code !== 0) {
       ghCtx.configError = `Auth not configured. Run: ${getSetupCommand(config.username)}`;
-      ctx.ui.notify(`gh-agent: ${ghCtx.configError}`, "error");
+      ctx.ui.notify(`gh-agent: ${ghCtx.configError}`, "warning");
       return;
     }
 
