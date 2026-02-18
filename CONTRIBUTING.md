@@ -1,105 +1,31 @@
 # Contributing
 
-This document defines the collaboration model and governance process for the Agent Framework project.
+I genuinely appreciate anyone willing to engage at this level: questions, challenges, different perspectives. Dialogue surfaces what we couldn't see alone.
 
-## A Note on Contributions
+That said, this is my model and I'm the one standing behind it. I'll be thoughtful about what fits, and I'll always do my best to explain my reasoning when something doesn't.
 
-I genuinely appreciate anyone willing to engage at this level: questions, challenges, different perspectives.
-Dialogue surfaces what we couldn't see alone.
+## How Concepts Evolve
 
-That said, this is my worldview and I'm the one standing behind it.
-I'll be thoughtful about what fits, and I'll always explain my reasoning when something doesn't.
+**Issues capture misalignment.** When collaboration doesn't feel right, or a concept doesn't land the way I intended, I open an issue. The issue is the gap — what I observed vs what I meant.
 
-## Collaboration Principles
+**PRs capture resolution.** When a concept or profile feels right, it goes in a PR. The PR is the claim: this now says what I mean.
 
-This is how I think software development should work.
+## What Goes Where
 
-### Context Completeness
+| Artifact | Purpose |
+|----------|---------|
+| Issue | Signal misalignment — what I observed vs what I intended |
+| PR | Capture resolution — the concept or profile, ready to merge |
+| RFC | Propose structural changes — see [docs/rfcs/](docs/rfcs/) |
 
-The repository and project tracking system (issues, PRs, discussions) are the sole source of truth.
-All context needed to continue work must be captured there.
-
-Insights from conversations or sessions should be distilled into appropriate artifacts (issues, RFC drafts, PR descriptions) before they become actionable.
-No out-of-band knowledge should be required.
-
-### Actor Agnosticism
-
-Human and artificial agent contributors participate through identical channels.
-The process doesn't distinguish who typed — only who stands behind it.
-
-Your username on an artifact (commit, review, comment) signals your accountability.
-If a change needs human sign-off, that human reviews and approves through standard mechanisms.
-
-### Adjustable Depth
-
-Contributors engage at the level appropriate to the change:
-
-- Approve a PR after reviewing the summary
-- Request a risk assessment
-- Review line-by-line
-- Drill into a specific line of code: "explain this"
-
-The process supports any depth, and your depth can change day to day.
-Choosing to engage shallowly on low-stakes changes is not abdication — it's attention allocation.
-
-## Governance
-
-### RFCs and ADRs
-
-Locations: `docs/rfcs/`, `docs/adrs/`
-
-RFCs (Requests for Comments) propose significant changes to Framework architecture (Foundation, Core, or Shell).
-ADRs (Architecture Decision Records) record accepted decisions — the permanent ledger of architectural commitments.
-
-Routine additions to Roles, Skills, and Profiles can go through regular PRs.
-Governance changes (this document) go through regular PRs.
-
-**Lifecycle:**
-
-1. Open pull request with RFC file (`Status: Proposed`)
-2. Discussion in PR comments
-3. Revise based on feedback
-4. When consensus: commit that changes RFC to `Status: Accepted` and adds corresponding ADR
-5. Final review of RFC acceptance and ADR accuracy
-6. Merge
-
-RFCs and ADRs are immutable once merged.
-To supersede either, create a new RFC that declares what it supersedes, with corresponding ADR.
-
-**Format:** `rfc-NN-short-title.md`, `adr-NN-short-title.md`
-
-### Workflow
-
-**For RFCs:** Open a pull request with the RFC file. Discussion happens in the PR.
-
-**For other changes:** Discuss in an issue first. Open a pull request once the approach is settled. (PRs to demonstrate or prototype during discussion are fine — link them from the issue.)
-
-### Pull Requests
-
-All changes go through pull requests.
-Direct commits to the main branch are not permitted.
-
-PR descriptions should provide sufficient context for review.
-For non-trivial changes, reference the relevant issue or RFC.
+Expectation alignment (concepts, profiles) flows through issues and PRs. Structural changes to the framework go through RFCs first.
 
 ## Writing Style
 
-Match precision to purpose.
+**Concepts** — Approachable. Plain language. As detailed as they need to be.
 
-**Approachable** — Vision docs, README, high-level explanations.
-Use plain language. If someone unfamiliar with software can't follow the idea, simplify.
+**Profiles** — Precise. Compressed for purpose. Match the context they'll be used in.
 
-**Precise** — RFCs, ADRs, technical specifications.
-Use specific terms. Nuance matters here; don't sacrifice accuracy for readability.
+## For Others
 
-The goal is clarity at the appropriate level, not uniform tone.
-
-## Versioning
-
-This project uses semantic versioning.
-The mapping of version increments to the framework structure will be defined via RFC once the structure is stable.
-
-## Platform
-
-This project uses GitHub for hosting, issues, and pull requests.
-The collaboration principles above apply to any platform with equivalent capabilities.
+If you see something that doesn't make sense, please open an issue. I'll explain my reasoning or realize I need to clarify.
