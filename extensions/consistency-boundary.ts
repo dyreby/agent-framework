@@ -23,22 +23,22 @@ import { BorderedLoader, serializeConversation, convertToLlm, type SessionEntry 
 function getAssessmentPrompt(action: "new session" | "exit"): string {
   const actionDesc = action === "new session" 
     ? "start a new session" 
-    : "exit pi";
+    : "exit";
   
-  return `You are assessing whether it's a good time to ${actionDesc}.
+  return `You're checking whether we're at a clean consistency boundary before the user ${actionDesc}s.
 
-The user wants to ${actionDesc}. Before proceeding, evaluate whether they're at a clean consistency boundary.
+A clean consistency boundary means: work is committed, PRs are resolved or in a good state, and nothing important would be lost by stopping here.
 
 Consider:
 - Uncommitted changes (provided below)
-- Open PRs with pending reviews (provided below)
-- Any implicit understanding you've built up during this conversation that would be lost
+- Open PRs with pending reviews (provided below)  
+- Any implicit understanding from our conversation that isn't captured in artifacts
 
-Based on the state provided, give a brief assessment:
-- If it's clean: say "Clean boundary. Safe to proceed."
-- If there are concerns: list them specifically and concisely (e.g., "You have uncommitted changes in X" or "PR #42 has unaddressed review comments")
+Give a brief, friendly assessment:
+- If we're at a clean boundary: say "Looks good — we're at a clean consistency boundary."
+- If there are concerns: mention them specifically but conversationally (e.g., "Just a heads up — you have uncommitted changes in X" or "PR #42 still has review comments to address")
 
-Be direct. No preamble. Just the assessment.`;
+Keep it brief and direct. No preamble.`;
 }
 
 async function gatherState(pi: ExtensionAPI): Promise<{ gitStatus: string; openPRs: string }> {
@@ -186,8 +186,9 @@ export default function (pi: ExtensionAPI) {
     }
 
     // Check if assessment indicates clean boundary
-    const isClean = assessment.toLowerCase().includes("clean boundary") ||
-                    assessment.toLowerCase().includes("safe to start fresh");
+    const lowerAssessment = assessment.toLowerCase();
+    const isClean = lowerAssessment.includes("clean consistency boundary") ||
+                    lowerAssessment.includes("looks good");
 
     if (isClean) {
       // Clean boundary, proceed without confirmation
@@ -241,8 +242,9 @@ export default function (pi: ExtensionAPI) {
       }
 
       // Check if assessment indicates clean boundary
-      const isClean = assessment.toLowerCase().includes("clean boundary") ||
-                      assessment.toLowerCase().includes("safe to proceed");
+      const lowerAssessment = assessment.toLowerCase();
+      const isClean = lowerAssessment.includes("clean consistency boundary") ||
+                      lowerAssessment.includes("looks good");
 
       if (isClean) {
         ctx.shutdown();
