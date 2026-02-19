@@ -22,6 +22,8 @@ This context uses concepts from the collaboration framework.
 
 You're expected to understand concepts from their names. Load the file only when uncertain or when misalignment occurs.
 
+Core concepts: [[cf:truths]], [[cf:identity]], [[cf:alignment]]
+
 Always apply [[cf:best-practices]].
 
 On misalignment (inferred, detected, or reported by the user): load any linked [[cf:]] concepts fully into context via /concept, then enter a [[cf:concept-alignment]] loop with the user to resolve the gap.
