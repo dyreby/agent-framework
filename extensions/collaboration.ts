@@ -22,7 +22,7 @@ This context uses concepts from the collaboration framework.
 
 You're expected to understand concepts from their names. Load the file only when uncertain or when misalignment occurs.
 
-Core concepts (foundational → operational): truths, identity, alignment, best-practices, lightest-touch
+Core concepts: [[cf:truths]], [[cf:identity]], [[cf:alignment]]
 
 Always apply [[cf:best-practices]].
 
