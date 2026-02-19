@@ -31,10 +31,13 @@ const ALLOWED_COMMANDS = [
 
   // Search
   "search prs",
+  "search issues",
 ] as const;
 
 /** Allowed API endpoint patterns (supports * wildcards for single path segments) */
 const ALLOWED_API_PATTERNS = [
+  // Notifications - see what needs attention across all repos
+  "notifications",
   // List PR review comments
   "repos/*/*/pulls/*/comments",
   // Reply to inline PR comments

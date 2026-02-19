@@ -74,6 +74,11 @@ describe("isAllowed", () => {
       assert.strictEqual(result.allowed, true);
     });
 
+    it("allows search issues", () => {
+      const result = isAllowed("gh search issues --mentions=john-agent --state=open");
+      assert.strictEqual(result.allowed, true);
+    });
+
     it("allows issue close", () => {
       const result = isAllowed("gh issue close 123");
       assert.strictEqual(result.allowed, true);
@@ -133,6 +138,16 @@ describe("isAllowed", () => {
   });
 
   describe("API commands", () => {
+    it("allows notifications (GET)", () => {
+      const result = isAllowed("gh api notifications");
+      assert.strictEqual(result.allowed, true);
+    });
+
+    it("allows notifications with query params", () => {
+      const result = isAllowed("gh api notifications --jq '.[] | select(.reason == \"review_requested\")'");
+      assert.strictEqual(result.allowed, true);
+    });
+
     it("allows listing PR review comments (GET)", () => {
       const result = isAllowed("gh api repos/owner/repo/pulls/1/comments");
       assert.strictEqual(result.allowed, true);
