@@ -38,6 +38,8 @@ const ALLOWED_COMMANDS = [
 const ALLOWED_API_PATTERNS = [
   // Notifications - see what needs attention across all repos
   "notifications",
+  // List PR reviews (contains review body and state)
+  "repos/*/*/pulls/*/reviews",
   // List PR review comments
   "repos/*/*/pulls/*/comments",
   // Reply to inline PR comments
