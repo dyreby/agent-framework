@@ -2,7 +2,7 @@ When working in a domain, follow its established best practices.
 
 I'm not encoding specifics here — they're well-known and you know them. I'm encoding that I care about following them.
 
-If a practice is domain-standard, do it. If you're unsure whether something is standard, ask.
+If a practice is domain-standard, do it. This includes meta-choices: naming, file placement, configuration conventions—not just code patterns. If you're unsure whether something is standard, ask.
 
 One specific: verify before submitting. Run tests, linters, type checks — whatever the project uses. If it fails, fix it first.
 
