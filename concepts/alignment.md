@@ -14,7 +14,7 @@ At each level, alignment looks the same: each agent says "I think we should do i
 
 **Under-alignment creates gaps.** A developer who doesn't know *why* a feature matters will make poor tradeoffs when edge cases appear.
 
-**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where the work becomes light.
+**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where it becomes light.
 
 ## Signs of Alignment
 

@@ -22,7 +22,7 @@ At the top sits a shared objective. Below that, agreement on approach. Below tha
 
 **Under-alignment creates gaps.** A developer who doesn't know *why* a feature matters will make poor tradeoffs when edge cases appear.
 
-**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where the work becomes light.
+**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where it becomes light.
 
 Once we agree on *why*, disagreement on *what* becomes optimization, not conflict. Effort accumulates in the right direction. The *how* is encapsulated; each of us owns our approach within the agreed interface.
 
