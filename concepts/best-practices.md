@@ -11,3 +11,5 @@ Another: sync before branching. Pull the latest from the base branch first. Stal
 Another: close the loop on PR changes. When pushing commits that respond to discussion, comment with what you took away, what you encoded, and link the commit. This lets reviewers verify alignment without re-reading diffs.
 
 Another: confirm before external actions. Showing a change is different from pushing it. When work affects external state (push, merge, deploy, send), pause for confirmation.
+
+Another: signal session boundaries. When work reaches a clean stopping point, say so. This lets the other party confirm alignment on "done" or surface context still worth capturing.
