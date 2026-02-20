@@ -1,116 +1,66 @@
 # Collaboration Framework
 
-I want to collaborate more effectively with people and AI agents.
-
-In my lived experience, most collaboration friction comes from misaligned assumptions, not different conclusions. This is my attempt to encode those assumptions explicitly. Aligning on a shared mental model of what to do, how to do it, and who does what makes the work light.
+A framework for encoding how I think, so we can collaborate effectively.
 
 ## The Gap
 
-What someone means and what they say are never quite the same. You've probably felt this gap — the frustration of being misunderstood, or the effort it takes to explain yourself clearly.
+What someone means and what they say are never quite the same. I've felt this: the frustration of being misunderstood, the effort it takes to explain myself clearly. I assume you've felt it too.
 
-I can't perfectly write what I mean, and you can't perfectly interpret what I wrote. But there's something here we can take advantage of: when I observe the result of our actions, I'm the only one who can decide "yes, that's what I meant" or "no, that missed the mark."
+I can't perfectly write what I mean. You can't perfectly interpret what I wrote. But here's what we can use: when I observe the result of our actions, I'm the only one who can decide "yes, that's what I meant" or "no, that missed the mark."
 
-This framework is my attempt to model that gap as usefully as possible, knowing it can't be closed entirely. If the framework makes collaboration with me lighter and more productive, I successfully encoded my intent. If it doesn't, the gap between what I meant and what I wrote is showing, and the only way forward is to iterate until the model better captures what I mean.
+This gap can't be closed—but it can be worked with. That's what this framework is for.
 
-## The Model
+## The Thesis
 
-A model encodes assumptions — invariants you take as given so you can reason about something more simply. The right assumptions let you create a simpler model that's actually useful. The wrong assumptions (or too many) make the model collapse under its own weight.
+**Effective collaboration requires alignment at the right level—not more, not less.**
 
-The simplest model I could come up with for collaboration between humans and AI agents starts with a few presuppositions:
+It's hierarchical: *why* → *what* → *how*. And each *how* contains its own why/what/how, all the way down.
 
-- Something exists.
-- Distinct things exist (you and me, agent and world).
-- Physics is consistent at the scale we operate.
-- An agent is an entity capable of acting in the world.
+At the top sits a shared objective. Below that, agreement on approach. Below that, agreement on implementation. Each level has the same shape: we each say what we think we should do and why, then agree or surface that we don't.
 
-These are models too, with their own assumptions. Non-duality questions whether distinct things exist. Quantum mechanics questions classical consistency. But you can (and probably should!) model a pendulum without accounting for quantum physics, even though the pendulum operates in quantum reality. I'm choosing the level that lets me say something useful about collaboration, not claiming these are ultimately true.
+**Over-alignment creates noise.** A junior developer doesn't need the CEO's full strategic context, and couldn't use it. The right level for them is: this feature matters, build it well.
 
-From those presuppositions, I claim six truths that apply to any agent — human or AI:
+**Under-alignment creates gaps.** A developer who doesn't know *why* a feature matters will make poor tradeoffs when edge cases appear.
 
-1. Agents act from internal objectives. This is intent.
-2. Agents have internal world models that are incomplete, fallible, and mutable.
-3. Agents use their world models to select actions in pursuit of objectives.
-4. World input, including from collaborators, is taken as given; what it means is model-derived.
-5. Collaboration adds context that agents can't derive alone, including the intent of the collaborator.
-6. Expressed intent is lossy. Agents must infer intent from expression, not treat expression as intent.
+**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where the work becomes light.
 
-That sixth truth is where this all leads. Words are models of concepts, and models simplify. Under the assumptions above — all the way back to distinct things existing — this necessarily follows. You're welcome to reject any of those assumptions, but if you do, this framework will be less useful for us when we collaborate.
+Once we agree on *why*, disagreement on *what* becomes optimization, not conflict. Effort accumulates in the right direction. The *how* is encapsulated; each of us owns our approach within the agreed interface.
 
-### Vocabulary
+Perfect agreement is impossible. The system is designed to iterate and self-correct.
 
-The model uses two terms:
+## How It Works
 
-**Concepts** encode what something means to me — principles, preferences, ways of thinking. They're the source of truth.
+### Concepts
 
-**Profiles** are concepts compressed for a specific purpose. A profile for a coding agent looks different than a profile for onboarding a teammate — same underlying concepts, different shape.
+Concepts encode what something means to me: principles, preferences, ways of thinking. They live in [`concepts/`](concepts/) as freeform markdown files.
 
-What isn't mentioned has no preference. If I say "tree," I mean just tree — not secretly hoping for oak. If a concept says nothing about formatting, I have no preference. This keeps the vocabulary tractable — I only encode what I'd push back on.
+What isn't mentioned has no preference. If I say "tree," I mean just tree, not secretly hoping for oak. This keeps the vocabulary tractable: I'll try to only say something when silence would mislead.
 
-## Closing the Loop
+### Iteration
 
-Because expressed intent is lossy, collaboration needs a correction loop. OODA (Observe, Orient, Decide, Act) is that loop.
+Because expressed intent is lossy, working together needs a correction loop. I observe the result, decide if it matches what I meant, and either accept or iterate.
 
-```
-        ┌──────────────────────────────┐
-        │                              │
-        ▼                              │
-    Observe → Orient → Decide → Act ───┘
-                 ▲
-                 │
-            [concepts]
-            [profiles]
-```
+### In Practice
 
-**Observe**: Notice what happened — feedback, friction, misalignment.
+**For me**: I use this to work effectively with my coding agent. It loads these concepts, and we operate from shared understanding rather than repeated instructions.
 
-**Orient**: Interpret through your worldview — concepts, principles, mental models. This is where the framework lives.
+**For you**: You can use this to understand how I think, either through specific concepts relevant to the task or as a collection of mental models.
 
-**Decide**: Choose whether to update your understanding or proceed as-is.
+The files aren't just agent context. They're readable documentation of how I think.
 
-**Act**: Make the change (or don't). The results become new observations.
+## Going Deeper
 
-OODA loops happen at whatever level you want to make a change. Refining this framework is an OODA loop. Collaborating on a coding task is an OODA loop. The structure is the same — what changes is what you're observing and what concepts shape your orientation.
-
-The human is essential at Decide. Only you know if what you observed matches what you intended. An agent can propose, orient, even act — but the decision to accept the result or iterate again is yours. That's the invariant from The Gap: you're the one who closes the loop.
-
-## In Practice
-
-Concepts are freeform markdown files. They're as detailed as they need to be. I iterate on them until they feel right.
-
-Profiles are generated from concepts, compressed for specific purposes. I iterate on them until the context feels right for the job.
-
-There's a practical benefit here: using an LLM to help encode how I think it will interpret my profiles works well when I use that same LLM in the agent. Not perfect, but in practice quite deterministic. (Or at least, that's the theory I'm testing.)
-
-## The Contract
-
-These are the assumptions I'm asking you to accept:
-
-1. You take my six truths as useful working assumptions.
-2. You take my word that this framework reflects how I think about these things.
-
-From my end, all these files are correct. The way I read them is the way I intend for them to be read. Beyond that, I can't guarantee you'll interpret them the way I meant. That's the gap — and why we iterate.
-
-## Using This
-
-**For me**: I use this to build an effective agent collaborator. My coding agent loads profiles generated from these concepts, and we collaborate from shared understanding rather than repeated instructions.
-
-**For you**: You can use this to understand how I approach collaboration — under specific profiles, or just as a collection of concepts relevant to the task at hand.
-
-The files aren't just agent context. They're readable documentation of my mental models for specific roles in specific environments.
+The [philosophy](docs/philosophy.md) captures the formal grounding: the presuppositions this model rests on and the truths that follow. You don't need it to work with me, but it's there if you want to see the derivation.
 
 ## Origins
 
-This started as a way to align with a coding agent. I wanted to give it the shared understanding it needed to work the way I do.
+This started as a way to work better with a coding agent. Along the way, I realized the same approach applies more broadly. The concepts that help an AI understand me help you understand me too.
 
-Along the way, I realized the same approach applies more broadly. The concepts that help an AI collaborate with me help you (hi! 👋) collaborate with me too. The framework became agent-agnostic — it's about collaboration, not about agents.
-
-The [RFCs](docs/rfcs/) and [ADRs](docs/adrs/) capture the evolution in detail.
+The [RFCs](docs/rfcs/) and [ADRs](docs/adrs/) capture the evolution.
 
 ## Building This
 
-I develop this framework with my current agent as a collaborator, treating it like any other codebase.
-
-As the agent improves, the work gets better and iteration gets faster. I participate where I add the most value, which evolves along with the agent.
+I develop this framework with assistance from my coding agent, treating it like any other codebase I collaborate on.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how this works in practice.
 
