@@ -1,14 +1,6 @@
 # Philosophy
 
-The deeper grounding for those who want it. You don't need this to collaborate effectively—the [README](../README.md) is self-sufficient. This is for anyone curious about the foundations.
-
-## The Gap
-
-What someone means and what they say are never quite the same. You've felt this—the frustration of being misunderstood, the effort it takes to explain yourself clearly.
-
-I can't perfectly write what I mean. You can't perfectly interpret what I wrote. But here's what we can use: when I observe the result of our actions, I'm the only one who can decide "yes, that's what I meant" or "no, that missed the mark."
-
-This gap can't be closed. It can be worked with.
+The formal grounding for those who want it. You don't need this to collaborate effectively with me—the [README](../README.md) is self-sufficient. This is the derivation behind that story.
 
 ## Presuppositions
 
@@ -36,7 +28,7 @@ From those presuppositions, six truths apply to any agent—human or AI:
 
 That sixth truth is where this all leads. Words are models of concepts, and models simplify. Under the assumptions above—all the way back to distinct things existing—this necessarily follows.
 
-You're welcome to reject any of these assumptions, but if you do, this framework will be less useful for us when we collaborate.
+These aren't axioms I'm asking you to accept on faith. They're the reasoning behind the README's claims. If they ring true, the framework will make more sense. If they don't, you can still collaborate with me—you just won't have the formal grounding for why it works.
 
 ## The Loop
 
@@ -60,15 +52,4 @@ Because expressed intent is lossy, collaboration needs a correction loop. OODA (
 
 **Act**: Make the change (or don't). The results become new observations.
 
-The human is essential at Decide. Only you know if what you observed matches what you intended. An agent can propose, orient, even act—but the decision to accept the result or iterate again is yours. That's the invariant from The Gap: you're the one who closes the loop.
-
-## The Contract
-
-These are the assumptions I'm asking you to accept:
-
-1. You take the six truths as useful working assumptions.
-2. You take my word that this framework reflects how I think about these things.
-
-From my end, all these files are correct. The way I read them is the way I intend for them to be read. Beyond that, I can't guarantee you'll interpret them the way I meant.
-
-That's the gap—and why we iterate.
+The human is essential at Decide. Only I know if what I observed matches what I intended. An agent can propose, orient, even act—but the decision to accept the result or iterate again is mine. That's the invariant from The Gap (expression ≠ intent): I'm the one who closes the loop.

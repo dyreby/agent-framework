@@ -2,65 +2,65 @@
 
 A framework for encoding how I think, so we can collaborate effectively.
 
-## Why This Exists
+## The Gap
 
-Most collaboration friction comes from misaligned assumptions, not different conclusions. When we share a mental model of *what* we're doing, *why* we're doing it, and *how* we'll work together, the work gets lighter.
+What someone means and what they say are never quite the same. I've felt this: the frustration of being misunderstood, the effort it takes to explain myself clearly. I assume you've felt it too.
 
-This framework encodes those assumptions explicitly—not to over-specify, but to align at the right level.
+I can't perfectly write what I mean. You can't perfectly interpret what I wrote. But here's what we can use: when I observe the result of our actions, I'm the only one who can decide "yes, that's what I meant" or "no, that missed the mark."
+
+This gap can't be closed—but it can be worked with. That's what this framework is for.
 
 ## The Thesis
 
 **Effective collaboration requires alignment at the right level—not more, not less.**
 
-Alignment is hierarchical: *why* → *what* → *how*. And each *how* contains its own why/what/how, all the way down.
+It's hierarchical: *why* → *what* → *how*. And each *how* contains its own why/what/how, all the way down.
 
-At the top sits a shared objective. Below that, agreement on approach. Below that, agreement on implementation. Each level has the same shape: we each say what we think we should do and why, then agree—or surface that we don't.
+At the top sits a shared objective. Below that, agreement on approach. Below that, agreement on implementation. Each level has the same shape: we each say what we think we should do and why, then agree or surface that we don't.
 
-**Over-alignment fails.** A mail sorter can't align with the CEO's full context—and shouldn't try. The right level for them is: mail matters, sort it well.
+**Over-alignment creates noise.** A junior developer doesn't need the CEO's full strategic context, and couldn't use it. The right level for them is: this feature matters, build it well.
 
-**Under-alignment creates friction.** A sorter who doesn't know *why* mail matters will sort poorly when edge cases appear.
+**Under-alignment creates gaps.** A developer who doesn't know *why* a feature matters will make poor tradeoffs when edge cases appear.
 
-**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until you find where the work lives. That's where you align.
+**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where the work becomes light.
 
-Once aligned on *why*, disagreement on *what* becomes optimization, not conflict. Effort accumulates in the right direction. The *how* is encapsulated—each agent owns their approach within the agreed interface.
+Once we agree on *why*, disagreement on *what* becomes optimization, not conflict. Effort accumulates in the right direction. The *how* is encapsulated; each of us owns our approach within the agreed interface.
 
-Perfect alignment is impossible. The system is designed to iterate and self-correct.
+Perfect agreement is impossible. The system is designed to iterate and self-correct.
 
 ## How It Works
 
 ### Concepts
 
-Concepts encode what something means to me—principles, preferences, ways of thinking. They live in [`concepts/`](concepts/) as freeform markdown files.
+Concepts encode what something means to me: principles, preferences, ways of thinking. They live in [`concepts/`](concepts/) as freeform markdown files.
 
-What isn't mentioned has no preference. If I say "tree," I mean tree—not secretly hoping for oak. This keeps the vocabulary tractable; I only encode what I'd push back on.
+What isn't mentioned has no preference. If I say "tree," I mean just tree, not secretly hoping for oak. This keeps the vocabulary tractable; I only encode what I'd push back on.
 
 ### Iteration
 
-Because expressed intent is lossy, collaboration needs a correction loop. I observe the result, decide if it matches what I meant, and either accept or iterate.
-
-You can't close this loop for me. Only I know if the output matches my intent. But you can orient well—and the concepts help you do that.
+Because expressed intent is lossy, working together needs a correction loop. I observe the result, decide if it matches what I meant, and either accept or iterate.
 
 ### In Practice
 
-**For me**: I use this to build an effective agent collaborator. My coding agent loads these concepts, and we collaborate from shared understanding rather than repeated instructions.
+**For me**: I use this to work effectively with my coding agent. It loads these concepts, and we operate from shared understanding rather than repeated instructions.
 
-**For you**: You can use this to understand how I approach collaboration—either through specific concepts relevant to the task, or as a collection of mental models.
+**For you**: You can use this to understand how I think, either through specific concepts relevant to the task or as a collection of mental models.
 
 The files aren't just agent context. They're readable documentation of how I think.
 
 ## Going Deeper
 
-The [philosophy](docs/philosophy.md) captures the deeper grounding—the gap between expression and intent, the presuppositions this model rests on, and the truths that follow. You don't need it to collaborate effectively, but it's there if you want it.
+The [philosophy](docs/philosophy.md) captures the formal grounding: the presuppositions this model rests on and the truths that follow. You don't need it to work with me, but it's there if you want to see the derivation.
 
 ## Origins
 
-This started as a way to align with a coding agent. Along the way, I realized the same approach applies more broadly. The concepts that help an AI collaborate with me help you collaborate with me too.
+This started as a way to work better with a coding agent. Along the way, I realized the same approach applies more broadly. The concepts that help an AI understand me help you understand me too.
 
 The [RFCs](docs/rfcs/) and [ADRs](docs/adrs/) capture the evolution.
 
 ## Building This
 
-I develop this framework with my current agent as a collaborator, treating it like any other codebase.
+I develop this framework with my current agent as a partner, treating it like any other codebase.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for how this works in practice.
 
