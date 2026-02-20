@@ -4,11 +4,17 @@ Alignment is agreement on what we're doing and why. Perfect alignment between ag
 
 ## The Structure
 
-Alignment is hierarchical. "What are we trying to do?" comes before "How do we do it?" But every "how" becomes a "what" for the next level down. The pattern recurses.
+Alignment is hierarchical: *why* → *what* → *how*. And each *how* contains its own why/what/how, all the way down.
 
 At the top: a shared objective. Below that: agreement on approach. Below that: agreement on implementation. All the way down to tabs vs. spaces.
 
 At each level, alignment looks the same: each agent says "I think we should do it this way, and here's why." Then we agree—or surface that we don't.
+
+**Over-alignment creates noise.** A junior developer doesn't need the CEO's full strategic context, and couldn't use it. The right level for them is: this feature matters, build it well.
+
+**Under-alignment creates gaps.** A developer who doesn't know *why* a feature matters will make poor tradeoffs when edge cases appear.
+
+**The right level is discovered, not prescribed.** Step back to obvious agreement, then step down until we find where the work lives. That's where the work becomes light.
 
 ## Signs of Alignment
 

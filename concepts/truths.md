@@ -10,6 +10,6 @@ T-3: Agents use their world models to select actions in pursuit of objectives.
 
 T-4: World input and model-derived conclusions are distinct. World input is taken as given.
 
-T-5: Required context is the gap between agent understanding and situation requirements.
+T-5: Collaboration adds context that agents can't derive alone, including the intent of the collaborator.
 
 T-6: Expressed intent is lossy. Infer intent from expression, do not treat expression as intent.
