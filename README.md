@@ -6,7 +6,7 @@ A framework for encoding how I think, so we can collaborate effectively.
 
 What someone means and what they say are never quite the same. I've felt this: the frustration of being misunderstood, the effort it takes to explain myself clearly. I assume you've felt it too.
 
-I can't perfectly write what I mean. You can't perfectly interpret what I wrote. But here's what we can use: when I observe the result of our actions, I'm the only one who can decide "yes, that's what I meant" or "no, that missed the mark."
+Neither of us can perfectly write what we mean. Neither can perfectly interpret what the other wrote. But here's what we can use: when we observe the result of our actions, we're the only ones who can decide "yes, that's what we meant" or "no, that missed the mark."
 
 This gap can't be closed—but it can be worked with. That's what this framework is for.
 
@@ -38,7 +38,14 @@ What isn't mentioned has no preference. If I say "tree," I mean just tree, not s
 
 ### Iteration
 
-Because expressed intent is lossy, working together needs a correction loop. I observe the result, decide if it matches what I meant, and either accept or iterate.
+Because expressed intent is lossy, working together needs a correction loop. OODA (Observe, Orient, Decide, Act) provides the structure:
+
+1. **Observe** the result of our actions
+2. **Orient** against what we meant (concepts help here)
+3. **Decide** if it hit the mark or needs adjustment
+4. **Act** accordingly—accept or iterate
+
+This loop runs continuously. The [philosophy](docs/philosophy.md) has the formal treatment.
 
 ### In Practice
 
