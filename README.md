@@ -32,9 +32,9 @@ Perfect agreement is impossible. The system is designed to iterate and self-corr
 
 ### Concepts
 
-Concepts encode what something means to me: principles, preferences, ways of thinking. They live in [`concepts/`](concepts/) as freeform markdown files.
+Concepts are words and phrases we assume mean the same to everyone, and often do, roughly. But exact meaning varies person to person, and this is why the gap exists.
 
-What isn't mentioned has no preference. If I say "tree," I mean just tree, not secretly hoping for oak. This keeps the vocabulary tractable: I'll try to only say something when silence would mislead.
+The [`concepts/`](concepts/) files are the clarification I've found my agents need for what each means to me. They work better when I don't overprescribe: if I say tree, I mean just tree, not secretly hoping for an oak. These files change constantly as I work with my agent: the framework in action.
 
 ### Iteration
 
