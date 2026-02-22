@@ -2,6 +2,7 @@
  * Collaboration framework extension.
  *
  * - /concept: Toggle concepts on/off via fuzzy picker
+ * - /review-pr: Review a pull request with OODA framing
  * - Injects preamble + active concepts into system prompt
  * - Shows active concepts in status bar
  */
@@ -9,6 +10,11 @@
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { readdirSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
+import {
+  getConfigDir,
+  getAccountForRepo,
+  parseRepoOwner,
+} from "./github/identity.ts";
 
 // Find concepts directory relative to this extension
 const extensionDir = dirname(import.meta.url.replace("file://", ""));
@@ -77,6 +83,191 @@ export default function (pi: ExtensionAPI) {
       }
 
       updateStatus(ctx);
+    },
+  });
+
+  // /review-pr command - review a pull request
+  pi.registerCommand("review-pr", {
+    description: "Review a pull request with OODA framing",
+    handler: async (args, ctx) => {
+      const prNumber = args?.trim();
+      if (!prNumber || !/^\d+$/.test(prNumber)) {
+        pi.sendUserMessage(
+          "Error: `/review-pr` requires a PR number. Usage: `/review-pr 24`"
+        );
+        return;
+      }
+
+      // Detect repo owner for identity switching
+      const repoOwnerResult = await pi.exec("git", [
+        "remote",
+        "get-url",
+        "origin",
+      ]);
+      const repoOwner =
+        repoOwnerResult.code === 0
+          ? parseRepoOwner(repoOwnerResult.stdout.trim())
+          : null;
+      const configDir = getConfigDir(getAccountForRepo(repoOwner));
+
+      // Helper to run gh commands with identity
+      async function gh(
+        command: string
+      ): Promise<{ ok: true; stdout: string } | { ok: false; error: string }> {
+        const result = await pi.exec("bash", [
+          "-c",
+          `GH_CONFIG_DIR="${configDir}" gh ${command}`,
+        ]);
+        if (result.code !== 0) {
+          const error = result.stderr.trim() || result.stdout.trim() || "Unknown error";
+          return { ok: false, error };
+        }
+        return { ok: true, stdout: result.stdout };
+      }
+
+      // Fetch PR metadata
+      const metadataResult = await gh(
+        `pr view ${prNumber} --json title,body,state,author,closingIssuesReferences`
+      );
+      if (!metadataResult.ok) {
+        pi.sendUserMessage(
+          `Error fetching PR #${prNumber}: ${metadataResult.error}`
+        );
+        return;
+      }
+
+      let metadata: {
+        title: string;
+        body: string;
+        state: string;
+        author: { login: string };
+        closingIssuesReferences: Array<{ number: number }>;
+      };
+      try {
+        metadata = JSON.parse(metadataResult.stdout);
+      } catch {
+        pi.sendUserMessage(
+          `Error parsing PR metadata: invalid JSON response`
+        );
+        return;
+      }
+
+      // Fetch diff stat (file summary)
+      const diffStatResult = await gh(`pr diff ${prNumber} --stat`);
+      if (!diffStatResult.ok) {
+        pi.sendUserMessage(
+          `Error fetching PR diff stat: ${diffStatResult.error}`
+        );
+        return;
+      }
+      const diffStat = diffStatResult.stdout.trim();
+
+      // Fetch full diff (with truncation)
+      const MAX_DIFF_BYTES = 50 * 1024; // 50KB
+      const diffResult = await gh(`pr diff ${prNumber}`);
+      if (!diffResult.ok) {
+        pi.sendUserMessage(`Error fetching PR diff: ${diffResult.error}`);
+        return;
+      }
+
+      let diff = diffResult.stdout;
+      let diffTruncated = false;
+      if (Buffer.byteLength(diff, "utf-8") > MAX_DIFF_BYTES) {
+        // Truncate at byte boundary, then find last complete line
+        const truncated = Buffer.from(diff, "utf-8")
+          .subarray(0, MAX_DIFF_BYTES)
+          .toString("utf-8");
+        const lastNewline = truncated.lastIndexOf("\n");
+        diff =
+          lastNewline > 0 ? truncated.substring(0, lastNewline) : truncated;
+        diffTruncated = true;
+      }
+
+      // Fetch linked issue titles
+      const linkedIssues: Array<{ number: number; title: string; url: string }> = [];
+      for (const issue of metadata.closingIssuesReferences) {
+        const issueResult = await gh(
+          `issue view ${issue.number} --json title,url`
+        );
+        if (issueResult.ok) {
+          try {
+            const issueData = JSON.parse(issueResult.stdout);
+            linkedIssues.push({
+              number: issue.number,
+              title: issueData.title,
+              url: issueData.url,
+            });
+          } catch {
+            // Skip malformed issue data
+          }
+        }
+        // Skip issues that fail to fetch (might be in different repo)
+      }
+
+      // Build the template
+      const linkedIssuesSection =
+        linkedIssues.length > 0
+          ? linkedIssues
+              .map((i) => `- #${i.number}: ${i.title} (${i.url})`)
+              .join("\n")
+          : "(none)";
+
+      const diffSection = diffTruncated
+        ? `${diff}\n\n[Diff truncated at 50KB. Use \`read <path>\` for specific files.]`
+        : diff;
+
+      const template = `## Task: Review PR #${prNumber}
+
+### Context
+
+**Title:** ${metadata.title}
+**Author:** ${metadata.author.login}
+**State:** ${metadata.state}
+
+**Body:**
+${metadata.body || "(no description)"}
+
+**Linked Issues:**
+${linkedIssuesSection}
+
+**Files Changed:**
+\`\`\`
+${diffStat}
+\`\`\`
+
+**Diff:**
+\`\`\`diff
+${diffSection}
+\`\`\`
+
+### Tools That Help
+
+- \`github "pr view ${prNumber}"\` — metadata, body, status
+- \`github "issue view <number>"\` — full issue details if needed
+- \`read <path>\` — examine specific files beyond the diff
+- \`github "pr diff ${prNumber}"\` — re-fetch diff if needed
+
+### Definition of Done
+
+A good review follows this structure:
+
+1. **Verdict**: Lead with the outcome
+2. **Understanding**: Show we get the point of this PR — the author should see we understood before we critique
+3. **What we like**: Call out what works well
+4. **Questions**: Things we're curious about or want clarified
+5. **Nits**: Minor suggestions, take-or-leave
+
+### How This Goes (OODA)
+
+**Orient (context alignment)**
+If you need more context beyond what's provided, propose what you think you need. I'll confirm, challenge, or narrow. Iterate until aligned, then fetch.
+
+**Decide (action alignment)**
+When ready, call the \`github\` tool with your \`pr review\` command. A confirmation modal will show the review—press Enter to execute, or Escape to discuss. If you escape, I'll tell you what's on my mind, you revise, and we iterate until aligned.
+
+Both loops can re-open if new information changes things.`;
+
+      pi.sendUserMessage(template);
     },
   });
 
