@@ -1,6 +1,6 @@
 # Collaboration Framework
 
-A framework for narrowing the gap between what we mean and what we say.
+A framework for narrowing the gap between intent and understanding.
 
 ## The Gap
 
