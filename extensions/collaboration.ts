@@ -20,6 +20,8 @@ const PREAMBLE = `<collaboration-framework>
 Concept names are semantically meaningful. The file contains specifics for alignment conversations.
 </collaboration-framework>
 
+Your interpretation of intent is probably wrong. Words are lossy compression—infer what was meant, hold it loosely, verify when stakes are non-trivial.
+
 Apply [[cf:best-practices]].`;
 
 export default function (pi: ExtensionAPI) {
