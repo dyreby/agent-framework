@@ -33,6 +33,9 @@ export interface GhToolResult {
   isError?: boolean;
 }
 
+/** Lock to prevent concurrent confirmation modals */
+let confirmationInProgress = false;
+
 /** Commands that don't modify state - skip confirmation */
 const READ_ONLY_PATTERNS = [
   /^(pr|issue|release|repo)\s+(list|view|status|diff|checks|ready)/,
@@ -62,17 +65,32 @@ interface ParsedCommand {
  * Handles: --flag value, --flag "value with spaces", --flag 'value'
  */
 function extractFlag(command: string, flag: string): string | undefined {
-  // Try --flag "value" or --flag 'value'
-  const quotedPattern = new RegExp(`--${flag}\\s+["']([^"']+)["']`);
-  const quotedMatch = command.match(quotedPattern);
-  if (quotedMatch) return quotedMatch[1];
+  // Find --flag position
+  const flagPattern = new RegExp(`--${flag}\\s+`);
+  const flagMatch = command.match(flagPattern);
+  if (!flagMatch || flagMatch.index === undefined) return undefined;
 
-  // Try --flag value (non-quoted, stops at next -- or end)
-  const simplePattern = new RegExp(`--${flag}\\s+([^\\s"'-][^\\s]*)`);
-  const simpleMatch = command.match(simplePattern);
-  if (simpleMatch) return simpleMatch[1];
+  const valueStart = flagMatch.index + flagMatch[0].length;
+  const rest = command.slice(valueStart);
 
-  return undefined;
+  // Check if value is quoted
+  const quoteChar = rest[0];
+  if (quoteChar === '"' || quoteChar === "'") {
+    // Find matching closing quote (not preceded by backslash)
+    let i = 1;
+    while (i < rest.length) {
+      if (rest[i] === quoteChar && rest[i - 1] !== "\\") {
+        return rest.slice(1, i).replace(/\\(.)/g, "$1"); // unescape
+      }
+      i++;
+    }
+    // No closing quote found, take everything
+    return rest.slice(1);
+  }
+
+  // Unquoted: take until whitespace or next flag
+  const unquotedMatch = rest.match(/^([^\s]+)/);
+  return unquotedMatch ? unquotedMatch[1] : undefined;
 }
 
 /**
@@ -321,13 +339,15 @@ async function showConfirmModal(
           const needsScroll = contentLines.length > MAX_CONTENT_HEIGHT;
           const maxScroll = Math.max(0, contentLines.length - MAX_CONTENT_HEIGHT);
 
-          // Top border
-          lines.push(theme.fg("accent", "─".repeat(width)));
+          // Top border (heavy line for visibility)
+          lines.push(theme.fg("accent", "━".repeat(width)));
+          lines.push(""); // breathing room
 
           // Header: "Create Pull Request as john-agent"
           const header = theme.bold(`${parsed.action} ${parsed.type} as ${account}`);
           lines.push(" " + theme.fg("accent", header));
           lines.push("");
+          lines.push(""); // extra space before content
 
           // Scroll indicator (top)
           if (needsScroll && scrollOffset > 0) {
@@ -349,6 +369,7 @@ async function showConfirmModal(
 
           // Footer
           lines.push("");
+          lines.push(""); // extra space before footer
           let footer =
             theme.fg("success", "[Enter]") +
             theme.fg("text", " Looks good  ") +
@@ -358,9 +379,10 @@ async function showConfirmModal(
             footer += "  " + theme.fg("dim", "[↑↓] Scroll");
           }
           lines.push(" " + footer);
+          lines.push(""); // breathing room
 
-          // Bottom border
-          lines.push(theme.fg("accent", "─".repeat(width)));
+          // Bottom border (heavy line for visibility)
+          lines.push(theme.fg("accent", "━".repeat(width)));
 
           return lines;
         },
@@ -393,6 +415,7 @@ async function showConfirmModal(
       overlay: true,
       overlayOptions: {
         width: "80%",
+        minWidth: 60,
         anchor: "center",
       },
     }
@@ -441,22 +464,41 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
 
       // Confirm before running commands that modify state
       if (!isReadOnly(command)) {
-        const confirmed = await showConfirmModal(
-          command,
-          account,
-          extCtx as ExtensionContext
-        );
+        // Prevent concurrent confirmation modals - must wait for user feedback
+        if (confirmationInProgress) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "A GitHub confirmation is already awaiting user feedback. Wait for the user to respond before calling this tool again.",
+              },
+            ],
+            isError: true,
+          };
+        }
+
+        confirmationInProgress = true;
+        let confirmed: boolean;
+        try {
+          confirmed = await showConfirmModal(
+            command,
+            account,
+            extCtx as ExtensionContext
+          );
+        } finally {
+          confirmationInProgress = false;
+        }
 
         if (!confirmed) {
           return {
             content: [
               {
                 type: "text",
-                text: "User has questions about this command. What questions do you have?",
+                text: "User pressed escape — action cancelled. They want to discuss before proceeding. Ask what's on their mind. Do not attempt this action through other means (e.g., bash).",
               },
             ],
             details: { exitCode: -1, account },
-            isError: false,
+            isError: true,
           };
         }
       }
