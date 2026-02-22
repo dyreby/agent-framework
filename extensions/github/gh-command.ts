@@ -33,6 +33,9 @@ export interface GhToolResult {
   isError?: boolean;
 }
 
+/** Lock to prevent concurrent confirmation modals */
+let confirmationInProgress = false;
+
 /** Commands that don't modify state - skip confirmation */
 const READ_ONLY_PATTERNS = [
   /^(pr|issue|release|repo)\s+(list|view|status|diff|checks|ready)/,
@@ -323,11 +326,13 @@ async function showConfirmModal(
 
           // Top border (heavy line for visibility)
           lines.push(theme.fg("accent", "━".repeat(width)));
+          lines.push(""); // breathing room
 
           // Header: "Create Pull Request as john-agent"
           const header = theme.bold(`${parsed.action} ${parsed.type} as ${account}`);
           lines.push(" " + theme.fg("accent", header));
           lines.push("");
+          lines.push(""); // extra space before content
 
           // Scroll indicator (top)
           if (needsScroll && scrollOffset > 0) {
@@ -349,6 +354,7 @@ async function showConfirmModal(
 
           // Footer
           lines.push("");
+          lines.push(""); // extra space before footer
           let footer =
             theme.fg("success", "[Enter]") +
             theme.fg("text", " Looks good  ") +
@@ -358,6 +364,7 @@ async function showConfirmModal(
             footer += "  " + theme.fg("dim", "[↑↓] Scroll");
           }
           lines.push(" " + footer);
+          lines.push(""); // breathing room
 
           // Bottom border (heavy line for visibility)
           lines.push(theme.fg("accent", "━".repeat(width)));
@@ -393,6 +400,7 @@ async function showConfirmModal(
       overlay: true,
       overlayOptions: {
         width: "80%",
+        minWidth: 60,
         anchor: "center",
       },
     }
@@ -441,11 +449,30 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
 
       // Confirm before running commands that modify state
       if (!isReadOnly(command)) {
-        const confirmed = await showConfirmModal(
-          command,
-          account,
-          extCtx as ExtensionContext
-        );
+        // Prevent concurrent confirmation modals - must wait for user feedback
+        if (confirmationInProgress) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "A GitHub confirmation is already awaiting user feedback. Wait for the user to respond before calling this tool again.",
+              },
+            ],
+            isError: true,
+          };
+        }
+
+        confirmationInProgress = true;
+        let confirmed: boolean;
+        try {
+          confirmed = await showConfirmModal(
+            command,
+            account,
+            extCtx as ExtensionContext
+          );
+        } finally {
+          confirmationInProgress = false;
+        }
 
         if (!confirmed) {
           return {
