@@ -321,8 +321,8 @@ async function showConfirmModal(
           const needsScroll = contentLines.length > MAX_CONTENT_HEIGHT;
           const maxScroll = Math.max(0, contentLines.length - MAX_CONTENT_HEIGHT);
 
-          // Top border
-          lines.push(theme.fg("accent", "─".repeat(width)));
+          // Top border (heavy line for visibility)
+          lines.push(theme.fg("accent", "━".repeat(width)));
 
           // Header: "Create Pull Request as john-agent"
           const header = theme.bold(`${parsed.action} ${parsed.type} as ${account}`);
@@ -359,8 +359,8 @@ async function showConfirmModal(
           }
           lines.push(" " + footer);
 
-          // Bottom border
-          lines.push(theme.fg("accent", "─".repeat(width)));
+          // Bottom border (heavy line for visibility)
+          lines.push(theme.fg("accent", "━".repeat(width)));
 
           return lines;
         },
@@ -452,11 +452,11 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
             content: [
               {
                 type: "text",
-                text: "User has questions about this command. What questions do you have?",
+                text: "User pressed escape — action cancelled. They want to discuss before proceeding. Ask what's on their mind. Do not attempt this action through other means (e.g., bash).",
               },
             ],
             details: { exitCode: -1, account },
-            isError: false,
+            isError: true,
           };
         }
       }
