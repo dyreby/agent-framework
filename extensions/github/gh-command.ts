@@ -65,17 +65,32 @@ interface ParsedCommand {
  * Handles: --flag value, --flag "value with spaces", --flag 'value'
  */
 function extractFlag(command: string, flag: string): string | undefined {
-  // Try --flag "value" or --flag 'value'
-  const quotedPattern = new RegExp(`--${flag}\\s+["']([^"']+)["']`);
-  const quotedMatch = command.match(quotedPattern);
-  if (quotedMatch) return quotedMatch[1];
+  // Find --flag position
+  const flagPattern = new RegExp(`--${flag}\\s+`);
+  const flagMatch = command.match(flagPattern);
+  if (!flagMatch || flagMatch.index === undefined) return undefined;
 
-  // Try --flag value (non-quoted, stops at next -- or end)
-  const simplePattern = new RegExp(`--${flag}\\s+([^\\s"'-][^\\s]*)`);
-  const simpleMatch = command.match(simplePattern);
-  if (simpleMatch) return simpleMatch[1];
+  const valueStart = flagMatch.index + flagMatch[0].length;
+  const rest = command.slice(valueStart);
 
-  return undefined;
+  // Check if value is quoted
+  const quoteChar = rest[0];
+  if (quoteChar === '"' || quoteChar === "'") {
+    // Find matching closing quote (not preceded by backslash)
+    let i = 1;
+    while (i < rest.length) {
+      if (rest[i] === quoteChar && rest[i - 1] !== "\\") {
+        return rest.slice(1, i).replace(/\\(.)/g, "$1"); // unescape
+      }
+      i++;
+    }
+    // No closing quote found, take everything
+    return rest.slice(1);
+  }
+
+  // Unquoted: take until whitespace or next flag
+  const unquotedMatch = rest.match(/^([^\s]+)/);
+  return unquotedMatch ? unquotedMatch[1] : undefined;
 }
 
 /**
