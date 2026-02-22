@@ -389,7 +389,13 @@ async function showConfirmModal(
         },
       };
     },
-    { overlay: true }
+    {
+      overlay: true,
+      overlayOptions: {
+        width: "80%",
+        anchor: "center",
+      },
+    }
   );
 }
 
