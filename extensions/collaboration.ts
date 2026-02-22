@@ -152,15 +152,34 @@ export default function (pi: ExtensionAPI) {
         return;
       }
 
-      // Fetch diff stat (file summary)
-      const diffStatResult = await gh(`pr diff ${prNumber} --stat`);
-      if (!diffStatResult.ok) {
+      // Fetch file change stats
+      const filesResult = await gh(`pr view ${prNumber} --json files`);
+      if (!filesResult.ok) {
         pi.sendUserMessage(
-          `Error fetching PR diff stat: ${diffStatResult.error}`
+          `Error fetching PR file stats: ${filesResult.error}`
         );
         return;
       }
-      const diffStat = diffStatResult.stdout.trim();
+      let diffStat: string;
+      try {
+        const filesData = JSON.parse(filesResult.stdout) as {
+          files: Array<{ path: string; additions: number; deletions: number }>;
+        };
+        const lines = filesData.files.map((f) => {
+          const changes = f.additions + f.deletions;
+          const plus = "+".repeat(Math.min(f.additions, 20));
+          const minus = "-".repeat(Math.min(f.deletions, 20));
+          return `${f.path.padEnd(50)} | ${String(changes).padStart(4)} ${plus}${minus}`;
+        });
+        const totalAdd = filesData.files.reduce((s, f) => s + f.additions, 0);
+        const totalDel = filesData.files.reduce((s, f) => s + f.deletions, 0);
+        lines.push(
+          `${filesData.files.length} files changed, ${totalAdd} insertions(+), ${totalDel} deletions(-)`
+        );
+        diffStat = lines.join("\n");
+      } catch {
+        diffStat = "(unable to parse file stats)";
+      }
 
       // Fetch full diff (with truncation)
       const MAX_DIFF_BYTES = 50 * 1024; // 50KB
