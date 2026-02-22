@@ -1,67 +1,78 @@
 /**
- * GitHub command execution with identity switching.
+ * GitHub tool for executing gh CLI commands with identity switching.
  *
- * No guardrails—trusted user. Just routes commands to the correct
- * GitHub account based on repo owner.
+ * Provides a dedicated `github` tool that wraps the gh CLI,
+ * automatically setting the correct GH_CONFIG_DIR based on repo owner.
  */
 
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
+import { Type } from "@sinclair/typebox";
+import type { ExtensionAPI, ToolDefinition } from "@mariozechner/pi-coding-agent";
 
-export interface GhCommandContext {
+export interface GhToolContext {
   pi: ExtensionAPI;
   getConfigDir: () => string;
+  getAccount: () => string;
   authError: string | null;
 }
 
-export interface CommandResult {
+export interface GhToolResult {
   content: Array<{ type: "text"; text: string }>;
   details?: { exitCode: number };
   isError?: boolean;
 }
 
 /**
- * Check if a command contains any gh invocations.
+ * Create the github tool definition.
  */
-export function containsGhCommand(command: string): boolean {
-  // Match `gh ` at start or after shell operators/subshell markers
-  return /(?:^|[;&|()]|\$\()\s*gh\s/.test(command);
-}
-
-/**
- * Execute a command containing gh invocations with the appropriate identity.
- *
- * Sets GH_CONFIG_DIR inline in the bash command for cross-platform compatibility
- * (works in bash on macOS, Linux, Git Bash on Windows, and WSL).
- */
-export async function executeGhCommand(
-  command: string,
-  ctx: GhCommandContext,
-  signal?: AbortSignal
-): Promise<CommandResult> {
-  const { pi, getConfigDir, authError } = ctx;
-
-  if (authError) {
-    return {
-      content: [{ type: "text", text: `github: ${authError}` }],
-      isError: true,
-    };
-  }
-
-  // Prepend GH_CONFIG_DIR to the command for cross-platform compatibility
-  // This syntax works in bash/sh on all platforms including Git Bash on Windows
-  const configDir = getConfigDir();
-  const wrappedCommand = `GH_CONFIG_DIR="${configDir}" ${command}`;
-
-  const result = await pi.exec("bash", ["-c", wrappedCommand], { signal });
-
-  const output = [result.stdout, result.stderr]
-    .filter(Boolean)
-    .join("\n")
-    .trim();
-
+export function createGithubTool(ctx: GhToolContext): ToolDefinition {
   return {
-    content: [{ type: "text", text: output || "(no output)" }],
-    details: { exitCode: result.code },
-    isError: result.code !== 0,
+    name: "github",
+    label: "GitHub",
+    description:
+      "Execute GitHub CLI (gh) commands. Use this instead of bash for all gh commands. " +
+      "Identity is handled automatically based on repo owner.",
+    parameters: Type.Object({
+      command: Type.String({
+        description:
+          "The gh command to run (without the 'gh' prefix). Examples: 'pr create --title \"Fix bug\"', 'issue list', 'pr view 123'",
+      }),
+    }),
+
+    async execute(
+      _toolCallId,
+      params,
+      signal
+    ): Promise<GhToolResult> {
+      const { command } = params as { command: string };
+      const { pi, getConfigDir, getAccount, authError } = ctx;
+
+      if (authError) {
+        return {
+          content: [{ type: "text", text: `github: ${authError}` }],
+          isError: true,
+        };
+      }
+
+      // Execute with the appropriate GH_CONFIG_DIR
+      const configDir = getConfigDir();
+      const fullCommand = `GH_CONFIG_DIR="${configDir}" gh ${command}`;
+
+      const result = await pi.exec("bash", ["-c", fullCommand], { signal });
+
+      const output = [result.stdout, result.stderr]
+        .filter(Boolean)
+        .join("\n")
+        .trim();
+
+      const account = getAccount();
+      const header = `[${account}]`;
+      const body = output || "(no output)";
+
+      return {
+        content: [{ type: "text", text: `${header} ${body}` }],
+        details: { exitCode: result.code, account },
+        isError: result.code !== 0,
+      };
+    },
   };
 }
