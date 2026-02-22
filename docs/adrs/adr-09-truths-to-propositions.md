@@ -10,8 +10,6 @@ The philosophy doc used "Truths" for the six statements derived from presupposit
 
 The framework's thesis is "all models are wrong, but some are useful." Calling derived statements "truths" contradicts that stance. It also invites misreading: "truth" can connote religious or subjective certainty ("my truth"), which isn't what I mean.
 
-I want this framework to eventually support a philosophy paper titled something like "A False but Useful Model for Collaboration." The terminology should reflect that framing.
-
 ## Decision
 
 Change terminology throughout:

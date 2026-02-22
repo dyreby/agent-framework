@@ -6,7 +6,7 @@ A framework for encoding how I think, so we can work together effectively.
 
 What someone means and what they say are never quite the same. I've felt this: the frustration of being misunderstood, the effort it takes to explain myself clearly. I assume you've felt it too.
 
-Neither of us can perfectly say what we mean. Neither can perfectly interpret what the other said. But we can observe results: I see your reaction to my action and sense whether my intent came through. You see my reaction to yours. A shared understanding of this dynamic creates space to align on intent before judging the expression. I can't be wrong about what I meant, and neither can you. Getting it across is where we need to help each other out.
+Neither of us can perfectly say what we mean. Neither can perfectly interpret what the other said. But we can observe results: I see your reaction to my action and can sense whether my intent came through. You see my reaction to yours. A shared understanding of this dynamic creates space to align on intent before judging the expression. I can't be wrong about what I meant, and neither can you. Getting it across is where we need to help each other out.
 
 This gap can't be closed—but it can be worked with. That's what this framework is for.
 
