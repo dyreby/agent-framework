@@ -69,7 +69,7 @@ If something might be worth capturing (one or two sentences max):
 
 Meta: if we OODA'd, that's a calibration signal. Was it worth stopping? If yes, the extension did its job—no changes needed. If not, what would have made this a clean goodbye? Surface that.`,
         display: false,
-      });
+      }, { triggerTurn: true });
     },
   });
 }
