@@ -46,6 +46,9 @@ export default function (pi: ExtensionAPI) {
       const cleanBye = pick(cleanGoodbyes);
       const oneMore = pick(oneMoreThings);
 
+      // Reflection doesn't need deep thinking
+      pi.setThinkingLevel("minimal");
+
       pi.sendMessage({
         customType: "midwest-goodbye",
         content: `The user typed /bye. Reflect on this session:
