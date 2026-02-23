@@ -3,6 +3,8 @@ description: Review a pull request with OODA framing
 ---
 ## Task: Review PR #$1
 
+Apply [[cf:writing-style]].
+
 ### Gather Context
 
 Use the `github` tool to fetch:
