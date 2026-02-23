@@ -38,7 +38,7 @@ The regex `` `cf:([a-zA-Z0-9_-]+)` `` matches the pattern.
 
 ### Keyboard Shortcut for Insertion
 
-Add `ctrl+r` shortcut that:
+Add `ctrl+i` shortcut that:
 1. Shows concept picker (fuzzy searchable)
 2. Inserts `` `cf:name` `` at cursor position
 
