@@ -68,9 +68,6 @@ export default function (pi: ExtensionAPI) {
   }
 
   pi.on("session_start", async (_event, ctx) => {
-    // Set initial status immediately to establish position before async work
-    ctx.ui.setStatus("github", ctx.ui.theme.fg("muted", "gh: ..."));
-
     // Detect repo owner
     currentRepoOwner = await detectRepoOwner();
 
@@ -87,15 +84,7 @@ export default function (pi: ExtensionAPI) {
     if (missing.length > 0) {
       ghCtx.authError = `Auth required. Run:\n${missing.join("\n")}`;
       ctx.ui.notify(`github: ${ghCtx.authError}`, "warning");
-      return;
     }
-
-    // Show active identity
-    const account = getAccountForRepo(currentRepoOwner);
-    const label = currentRepoOwner
-      ? `${currentRepoOwner}/* → ${account}`
-      : `(no repo) → ${account}`;
-    ctx.ui.setStatus("github", ctx.ui.theme.fg("success", `gh: ${label}`));
   });
 
   // Inject communication style and github tool instruction
