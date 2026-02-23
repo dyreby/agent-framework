@@ -40,6 +40,7 @@ export default function (pi: ExtensionAPI) {
     pi,
     getConfigDir: () => getConfigDir(getAccountForRepo(currentRepoOwner)),
     getAccount: () => getAccountForRepo(currentRepoOwner),
+    getRepoOwner: () => currentRepoOwner,
     authError: null,
   };
 

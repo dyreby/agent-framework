@@ -3,6 +3,10 @@
  *
  * Provides a dedicated `github` tool that wraps the gh CLI,
  * automatically setting the correct GH_CONFIG_DIR based on repo owner.
+ *
+ * Identity is determined by (in order of priority):
+ * 1. `--repo owner/repo` flag in the command
+ * 2. Current directory's git remote
  */
 
 import { Type } from "@sinclair/typebox";
@@ -19,11 +23,14 @@ import {
   Text,
   wrapTextWithAnsi,
 } from "@mariozechner/pi-tui";
+import { getAccountForRepo, getConfigDir as getConfigDirForAccount } from "./identity.ts";
 
 export interface GhToolContext {
   pi: ExtensionAPI;
   getConfigDir: () => string;
   getAccount: () => string;
+  /** Fallback repo owner from cwd detection (used when --repo not specified) */
+  getRepoOwner: () => string | null;
   authError: string | null;
 }
 
@@ -451,7 +458,7 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
       extCtx
     ): Promise<GhToolResult> {
       const { command } = params as { command: string };
-      const { pi, getConfigDir, getAccount, authError } = ctx;
+      const { pi, getConfigDir, getAccount, getRepoOwner, authError } = ctx;
 
       if (authError) {
         return {
@@ -460,7 +467,20 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
         };
       }
 
-      const account = getAccount();
+      // Determine account: prefer --repo flag over cwd detection
+      const repoFlag = extractFlag(command, "repo");
+      let account: string;
+      let configDir: string;
+
+      if (repoFlag) {
+        // Parse owner from "owner/repo" format
+        const owner = repoFlag.split("/")[0];
+        account = getAccountForRepo(owner);
+        configDir = getConfigDirForAccount(account);
+      } else {
+        account = getAccount();
+        configDir = getConfigDir();
+      }
 
       // Confirm before running commands that modify state
       if (!isReadOnly(command)) {
@@ -504,7 +524,6 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
       }
 
       // Execute with the appropriate GH_CONFIG_DIR
-      const configDir = getConfigDir();
       const fullCommand = `GH_CONFIG_DIR="${configDir}" gh ${command}`;
 
       const result = await pi.exec("bash", ["-c", fullCommand], { signal });
