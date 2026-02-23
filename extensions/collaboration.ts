@@ -54,29 +54,33 @@ function loadConceptFile(name: string): string | null {
 
 /**
  * Recursively load all concepts referenced by markers in the given text.
- * Returns a map of concept name -> content.
+ * Returns { loaded: Map<name, content>, missing: Set<name> }.
  */
 function loadConceptsRecursively(
   text: string,
-  loaded: Map<string, string> = new Map()
-): Map<string, string> {
+  loaded: Map<string, string> = new Map(),
+  missing: Set<string> = new Set()
+): { loaded: Map<string, string>; missing: Set<string> } {
   const markers = parseConceptMarkers(text);
 
   for (const name of markers) {
-    // Skip already loaded (prevents cycles)
-    if (loaded.has(name)) continue;
+    // Skip already processed (prevents cycles)
+    if (loaded.has(name) || missing.has(name)) continue;
 
     const content = loadConceptFile(name);
-    if (content === null) continue;
+    if (content === null) {
+      missing.add(name);
+      continue;
+    }
 
     // Mark as loaded before recursing (prevents cycles)
     loaded.set(name, content);
 
     // Recursively load concepts referenced within this concept
-    loadConceptsRecursively(content, loaded);
+    loadConceptsRecursively(content, loaded, missing);
   }
 
-  return loaded;
+  return { loaded, missing };
 }
 
 const PREAMBLE = `<collaboration-framework>
@@ -367,7 +371,12 @@ Both loops can re-open if new information changes things.`;
 
     // Auto-load concepts from markers in preamble, system prompt, and user prompt
     const allText = `${PREAMBLE}\n${event.systemPrompt}\n${event.prompt}`;
-    const autoLoaded = loadConceptsRecursively(allText);
+    const { loaded: autoLoaded, missing } = loadConceptsRecursively(allText);
+
+    // Warn about missing concept files
+    for (const name of missing) {
+      ctx.ui.notify(`Missing concept: ${name}.md`, "warning");
+    }
 
     // Add auto-loaded concepts to session cache
     for (const [name] of autoLoaded) {
