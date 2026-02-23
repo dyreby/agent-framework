@@ -1,6 +1,6 @@
 ---
 name: worktrees
-description: Manage git worktrees. Use when switching branches or creating new PRs in a repo that's already on a feature branch or has open PRs.
+description: Git worktrees for working on multiple branches or features in parallel.
 ---
 
 # Git Worktree Management
