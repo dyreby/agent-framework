@@ -2,6 +2,7 @@
 
 Preferences for GitHub operations in dyreby/* repos:
 
+- **Repo flag**: Always use `--repo owner/repo` explicitly. Don't rely on cwd detection.
 - **Branching**: Never commit directly to main. Always create a branch and PR for changes—even small fixes.
 - **PR creation**: When creating a PR as john-agent, request dyreby's review.
 - **PR updates**: After pushing changes that address review feedback, re-request review.
