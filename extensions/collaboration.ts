@@ -122,7 +122,8 @@ export default function (pi: ExtensionAPI) {
         .map(([name, count]) => `${name}(${count})`);
       ctx.ui.setStatus(
         "concepts",
-        ctx.ui.theme.fg("success", `concepts: ${sorted.join(", ")}`)
+        ctx.ui.theme.fg("muted", "│ ") +
+          ctx.ui.theme.fg("success", `concepts: ${sorted.join(", ")}`)
       );
     }
   }

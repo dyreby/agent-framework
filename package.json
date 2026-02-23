@@ -9,9 +9,9 @@
   "keywords": ["pi-package"],
   "pi": {
     "extensions": [
-      "./extensions/collaboration.ts",
+      "./extensions/github",
       "./extensions/midwest-goodbye.ts",
-      "./extensions/github"
+      "./extensions/collaboration.ts"
     ]
   }
 }
