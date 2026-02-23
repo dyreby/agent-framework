@@ -42,3 +42,10 @@ git worktree prune  # clean stale entries
 2. Create worktree in sibling directory
 3. `cd` into the new worktree and continue working there
 4. Show the path so user can open it in another window if needed
+
+### After PR merges (or work abandoned)
+
+5. Return to main repo directory
+6. Remove the worktree: `git worktree remove ../{repo}-{identifier}`
+7. Delete the branch if merged: `git branch -d {branch-name}`
+8. Prune if needed: `git worktree prune`
