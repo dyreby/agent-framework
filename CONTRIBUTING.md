@@ -23,6 +23,19 @@ Approachable. Plain language. As detailed as it needs to be, no more.
 
 ## Extensions
 
+Start each extension with a block comment describing what it does:
+
+```typescript
+/**
+ * Brief name or purpose.
+ *
+ * What the extension provides—commands, keybindings, behaviors.
+ * Enough context to understand at a glance.
+ */
+```
+
+This helps with quick scanning when listing extensions.
+
 When adding a new extension, add it to `pi.extensions` in `package.json`.
 The manifest is explicit so users know what they're installing.
 Installation is through git:
