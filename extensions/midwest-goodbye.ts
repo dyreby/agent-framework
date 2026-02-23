@@ -40,13 +40,24 @@ function pick<T>(list: T[]): T {
 }
 
 export default function (pi: ExtensionAPI) {
+  // Track when we need to restore thinking level after /bye reflection
+  let pendingRestore: ReturnType<typeof pi.getThinkingLevel> | null = null;
+
+  pi.on("turn_end", () => {
+    if (pendingRestore !== null) {
+      pi.setThinkingLevel(pendingRestore);
+      pendingRestore = null;
+    }
+  });
+
   pi.registerCommand("bye", {
     description: "Hand on the doorknob check",
     handler: async () => {
       const cleanBye = pick(cleanGoodbyes);
       const oneMore = pick(oneMoreThings);
 
-      // Reflection doesn't need deep thinking
+      // Reflection doesn't need deep thinking—save current level to restore after
+      pendingRestore = pi.getThinkingLevel();
       pi.setThinkingLevel("minimal");
 
       pi.sendMessage({
