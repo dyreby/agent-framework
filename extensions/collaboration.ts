@@ -87,7 +87,7 @@ function loadConceptsRecursively(
 }
 
 const PREAMBLE = `<collaboration-framework>
-\`cf:name\` is a provenance marker — it references a shared concept (concepts/name.md).
+\`cf:<name>\` is a provenance marker — it references a shared concept (concepts/<name>.md).
 Concept names are semantically meaningful. The file contains specifics for alignment conversations.
 </collaboration-framework>
 
