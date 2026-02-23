@@ -1,14 +1,15 @@
 /**
  * Collaboration framework extension.
  *
- * - /concept: Toggle concepts on/off via fuzzy picker
+ * - /concept: Pre-load concepts (equivalent to [[cf:name]] in next prompt)
  * - /review-pr: Review a pull request with OODA framing
- * - Injects preamble + active concepts into system prompt
+ * - Auto-loads concepts from [[cf:name]] markers (recursive)
+ * - Injects preamble + loaded concepts into system prompt
  * - Shows active concepts in status bar
  */
 
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join, dirname } from "node:path";
 import {
   getConfigDir,
@@ -21,17 +22,75 @@ const extensionDir = dirname(import.meta.url.replace("file://", ""));
 const repoRoot = join(extensionDir, "..");
 const conceptsDir = join(repoRoot, "concepts");
 
+// Regex to match [[cf:name]] markers
+const CONCEPT_MARKER_REGEX = /\[\[cf:([a-zA-Z0-9_-]+)\]\]/g;
+
+/**
+ * Parse text for [[cf:name]] markers and return unique concept names.
+ */
+function parseConceptMarkers(text: string): string[] {
+  const matches = text.matchAll(CONCEPT_MARKER_REGEX);
+  const names = new Set<string>();
+  for (const match of matches) {
+    names.add(match[1]);
+  }
+  return [...names];
+}
+
+/**
+ * Load a concept file and return its content, or null if not found.
+ */
+function loadConceptFile(name: string): string | null {
+  const path = join(conceptsDir, `${name}.md`);
+  if (!existsSync(path)) {
+    return null;
+  }
+  try {
+    return readFileSync(path, "utf-8");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Recursively load all concepts referenced by markers in the given text.
+ * Returns a map of concept name -> content.
+ */
+function loadConceptsRecursively(
+  text: string,
+  loaded: Map<string, string> = new Map()
+): Map<string, string> {
+  const markers = parseConceptMarkers(text);
+
+  for (const name of markers) {
+    // Skip already loaded (prevents cycles)
+    if (loaded.has(name)) continue;
+
+    const content = loadConceptFile(name);
+    if (content === null) continue;
+
+    // Mark as loaded before recursing (prevents cycles)
+    loaded.set(name, content);
+
+    // Recursively load concepts referenced within this concept
+    loadConceptsRecursively(content, loaded);
+  }
+
+  return loaded;
+}
+
 const PREAMBLE = `<collaboration-framework>
 [[cf:name]] is a provenance marker — it references a shared concept (concepts/name.md).
 Concept names are semantically meaningful. The file contains specifics for alignment conversations.
 </collaboration-framework>
 
-Your interpretation of intent is probably wrong. Words are lossy compression—infer what was meant, hold it loosely, verify when stakes are non-trivial.
-
-Apply [[cf:best-practices]].`;
+Your interpretation of intent is probably wrong. Words are lossy compression—infer what was meant, hold it loosely, verify when stakes are non-trivial.`;
 
 export default function (pi: ExtensionAPI) {
   const activeConcepts = new Set<string>();
+
+  // Track concepts already loaded in this session (to avoid re-injecting)
+  const sessionLoadedConcepts = new Set<string>();
 
   function getAvailableConcepts(): string[] {
     try {
@@ -43,18 +102,27 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
-  function updateStatus(ctx: { ui: { setStatus: (id: string, text: string | undefined) => void; theme: { fg: (color: string, text: string) => string } } }) {
+  function updateStatus(ctx: {
+    ui: {
+      setStatus: (id: string, text: string | undefined) => void;
+      theme: { fg: (color: string, text: string) => string };
+    };
+  }) {
     if (activeConcepts.size === 0) {
       ctx.ui.setStatus("concepts", undefined);
     } else {
       const names = [...activeConcepts].sort().join(", ");
-      ctx.ui.setStatus("concepts", ctx.ui.theme.fg("success", `concepts: ${names}`));
+      ctx.ui.setStatus(
+        "concepts",
+        ctx.ui.theme.fg("success", `concepts: ${names}`)
+      );
     }
   }
 
-  // /concept command - toggle concepts on/off
+  // /concept command - pre-load concepts without LLM roundtrip
   pi.registerCommand("concept", {
-    description: "Toggle concepts on/off",
+    description:
+      "Pre-load a concept (equivalent to [[cf:name]] in your next prompt)",
     handler: async (_args, ctx) => {
       const available = getAvailableConcepts();
       if (available.length === 0) {
@@ -119,7 +187,8 @@ export default function (pi: ExtensionAPI) {
           `GH_CONFIG_DIR="${configDir}" gh ${command}`,
         ]);
         if (result.code !== 0) {
-          const error = result.stderr.trim() || result.stdout.trim() || "Unknown error";
+          const error =
+            result.stderr.trim() || result.stdout.trim() || "Unknown error";
           return { ok: false, error };
         }
         return { ok: true, stdout: result.stdout };
@@ -146,9 +215,7 @@ export default function (pi: ExtensionAPI) {
       try {
         metadata = JSON.parse(metadataResult.stdout);
       } catch {
-        pi.sendUserMessage(
-          `Error parsing PR metadata: invalid JSON response`
-        );
+        pi.sendUserMessage(`Error parsing PR metadata: invalid JSON response`);
         return;
       }
 
@@ -203,7 +270,11 @@ export default function (pi: ExtensionAPI) {
       }
 
       // Fetch linked issue titles
-      const linkedIssues: Array<{ number: number; title: string; url: string }> = [];
+      const linkedIssues: Array<{
+        number: number;
+        title: string;
+        url: string;
+      }> = [];
       for (const issue of metadata.closingIssuesReferences) {
         const issueResult = await gh(
           `issue view ${issue.number} --json title,url`
@@ -290,23 +361,41 @@ Both loops can re-open if new information changes things.`;
     },
   });
 
-  // Inject preamble + active concepts into system prompt
+  // Inject preamble + auto-loaded concepts + manual concepts into system prompt
   pi.on("before_agent_start", async (event, ctx) => {
     let injection = PREAMBLE;
 
-    if (activeConcepts.size > 0) {
+    // Auto-load concepts from markers in preamble, system prompt, and user prompt
+    const allText = `${PREAMBLE}\n${event.systemPrompt}\n${event.prompt}`;
+    const autoLoaded = loadConceptsRecursively(allText);
+
+    // Add auto-loaded concepts to session cache
+    for (const [name] of autoLoaded) {
+      if (!sessionLoadedConcepts.has(name)) {
+        sessionLoadedConcepts.add(name);
+      }
+    }
+
+    // Also include manually activated concepts (via /concept command)
+    for (const name of activeConcepts) {
+      if (!sessionLoadedConcepts.has(name)) {
+        sessionLoadedConcepts.add(name);
+      }
+    }
+
+    // Build concept contents from all accumulated concepts
+    // (system prompt is rebuilt each turn, so we need to inject all)
+    // Preserve insertion order: first loaded = earlier in context = more weight
+    if (sessionLoadedConcepts.size > 0) {
       const conceptContents: string[] = [];
-      for (const name of activeConcepts) {
-        try {
-          const content = readFileSync(join(conceptsDir, `${name}.md`), "utf-8");
+      for (const name of sessionLoadedConcepts) {
+        const content = loadConceptFile(name);
+        if (content) {
           conceptContents.push(`## ${name}\n\n${content}`);
-        } catch (e) {
-          ctx.ui.notify(`Failed to read concept: ${name}`, "error");
         }
       }
-
       if (conceptContents.length > 0) {
-        injection += `\n\n# Active Concepts\n\n${conceptContents.join("\n\n---\n\n")}`;
+        injection += `\n\n# Loaded Concepts\n\n${conceptContents.join("\n\n---\n\n")}`;
       }
     }
 
@@ -315,8 +404,9 @@ Both loops can re-open if new information changes things.`;
     };
   });
 
-  // Restore status on session start (concepts don't persist, but status should be clear)
+  // Reset session state on session start
   pi.on("session_start", async (_event, ctx) => {
+    sessionLoadedConcepts.clear();
     updateStatus(ctx);
   });
 }
