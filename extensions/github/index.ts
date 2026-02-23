@@ -31,7 +31,7 @@ const COMMUNICATION_STYLE = `Use "I" for your own perspective. Respond to contex
 /** Instruction to use the github tool for gh commands */
 const GITHUB_TOOL_INSTRUCTION = `For GitHub CLI operations (gh commands), use the \`github\` tool instead of bash. The github tool handles identity switching automatically.
 
-Apply [[cf:github-preferences]].`;
+Apply \`cf:github-preferences\`.`;
 
 export default function (pi: ExtensionAPI) {
   let currentRepoOwner: string | null = null;
