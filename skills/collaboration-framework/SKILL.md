@@ -22,7 +22,10 @@ Load context to have the full picture for behavior discussions:
 3. **Extensions** (summaries):
    List and read top-of-file descriptions from [../../extensions/](../../extensions/)
 
-4. **Docs** (list for reference):
+4. **Prompts** (list for reference):
+   List files in [../../prompts/](../../prompts/)
+
+5. **Docs** (list for reference):
    List files in [../../docs/](../../docs/)
    Read specific docs if reasoning context is needed.
 
@@ -33,7 +36,10 @@ Load context to have the full picture for behavior discussions:
 | `concepts/` | Shared mental models loaded into sessions. **This is what shapes agent behavior.** |
 | `skills/` | Reusable agent skills (workflows, capabilities) |
 | `extensions/` | Pi extensions (tools, providers) |
+| `prompts/` | Prompt templates (invoked via `/promptname`) |
 | `docs/` | Philosophy, RFCs, ADRs (reasoning behind decisions) |
+
+**Note:** `prompts/` is a project directory, not `.pi/prompts/`. The `.pi/` directory is user-local config and shouldn't be committed.
 
 ## Behavior Changes
 
@@ -42,6 +48,7 @@ To fix agent behavior, identify where the change belongs:
 - **Mental model / interpretation** → `concepts/`
 - **Workflow / capability** → `skills/`
 - **Tooling / pi integration** → `extensions/`
+- **Reusable prompts** → `prompts/`
 - **Reasoning / principles** → `docs/`
 
 Workflow:
