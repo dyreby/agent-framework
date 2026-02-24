@@ -54,7 +54,7 @@ To fix agent behavior, identify where the change belongs:
 Workflow:
 1. Load context (above)
 2. Identify where the fix belongs
-3. Branch, edit, PR
+3. Branch, edit, PR (never commit directly to main—it's protected)
 4. Once merged, updated content affects future sessions
 
 ## Installation
