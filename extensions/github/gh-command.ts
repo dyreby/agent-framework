@@ -9,6 +9,7 @@
  * 2. Current directory's git remote
  */
 
+import { homedir } from "node:os";
 import { Type } from "@sinclair/typebox";
 import { DynamicBorder } from "@mariozechner/pi-coding-agent";
 import type {
@@ -524,9 +525,11 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
       }
 
       // Execute with the appropriate GH_CONFIG_DIR
+      // When --repo is specified, run from ~ to avoid cwd remote detection issues
       const fullCommand = `GH_CONFIG_DIR="${configDir}" gh ${command}`;
+      const cwd = repoFlag ? homedir() : undefined;
 
-      const result = await pi.exec("bash", ["-c", fullCommand], { signal });
+      const result = await pi.exec("bash", ["-c", fullCommand], { signal, cwd });
 
       const output = [result.stdout, result.stderr]
         .filter(Boolean)
