@@ -29,7 +29,7 @@ export interface GhToolContext {
   pi: ExtensionAPI;
   getConfigDir: () => string;
   getAccount: () => string;
-  /** Fallback repo owner from cwd detection (used when --repo not specified) */
+  /** Repo owner from cwd detection */
   getRepoOwner: () => string | null;
   authError: string | null;
 }
