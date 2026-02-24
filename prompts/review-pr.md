@@ -3,7 +3,7 @@ description: Review a pull request with OODA framing
 ---
 ## Task: Review PR #$1
 
-Apply `cf:writing-style`.
+Apply `cf:github-preferences`, `cf:lightest-touch`, `cf:writing-style`.
 
 ### Gather Context
 
