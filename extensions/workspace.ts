@@ -1,7 +1,8 @@
 /**
  * Workspace tool for context-switching between repos.
  *
- * Opens a new tmux window in the target repo directory with status bar context.
+ * Opens a new tmux window in the target repo directory with status bar context,
+ * then starts pi with injected context for seamless handoff.
  * Use this to transition from discovery (cross-repo queries) to focused work.
  */
 
@@ -49,10 +50,20 @@ export default function (pi: ExtensionAPI) {
             'Optional context to show in window name (e.g., "#165" for a PR, "fix-bug" for a branch)',
         })
       ),
+      prompt: Type.Optional(
+        Type.String({
+          description:
+            "Optional prompt to start pi with in the new window. Use this to inject context about what to work on.",
+        })
+      ),
     }),
 
     async execute(_toolCallId, params, _signal) {
-      const { repo, context } = params as { repo: string; context?: string };
+      const { repo, context, prompt } = params as {
+        repo: string;
+        context?: string;
+        prompt?: string;
+      };
 
       // Parse owner/repo
       const parts = repo.split("/");
@@ -117,6 +128,41 @@ export default function (pi: ExtensionAPI) {
             },
           ],
           isError: true,
+        };
+      }
+
+      // Start pi with context if prompt provided
+      if (prompt) {
+        // Escape single quotes in the prompt for shell
+        const escapedPrompt = prompt.replace(/'/g, "'\\''");
+        const piCommand = `pi --prompt '${escapedPrompt}'`;
+
+        const piResult = await pi.exec("tmux", [
+          "send-keys",
+          "-t",
+          windowName,
+          piCommand,
+          "Enter",
+        ]);
+
+        if (piResult.code !== 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Opened workspace but failed to start pi: ${piResult.stderr}\nWindow: ${windowName}\nPath: ${repoPath}`,
+              },
+            ],
+          };
+        }
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with context.\n\nSwitch to that tmux window to continue.`,
+            },
+          ],
         };
       }
 
