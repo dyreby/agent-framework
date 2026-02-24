@@ -17,7 +17,7 @@ Use the `github` tool to fetch:
 
 A good review follows this structure:
 
-1. **Verdict**: First sentence states the outcome (Approve/Request Changes/Comment)
+1. **Verdict**: First sentence states the outcome naturally (e.g., "Looks good to me.", "Good to go.", "This is solid.", "Approved."—vary the tone, keep it human. For non-approvals: "Not quite there yet.", "A few things to address.", "Some questions before I can approve.")
 2. **My Understanding**: "My understanding of this PR is that it..." — capture the intent one level up from what changed. The author should see I understood before I critique.
 3. **What I Like**: Something genuinely clever, thoughtful, or notable (omit for straightforward PRs)
 4. **Questions**: Things I'm curious about or want clarified (omit if none)
