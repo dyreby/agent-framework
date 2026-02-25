@@ -7,6 +7,7 @@ Preferences for GitHub operations in dyreby/* repos:
 - **PR creation**: When creating a PR as john-agent, request dyreby's review.
 - **PR updates**: After pushing changes that address review feedback, re-request review.
 - **Addressing feedback**: Check *both* PR-level comments (`github pr view --comments`) *and* inline review comments (`github api repos/{owner}/{repo}/pulls/{n}/comments`). Reply to each, summarizing what changed and why. Include the commit SHA.
+- **Replying to inline comments**: Use `github api repos/{owner}/{repo}/pulls/{n}/comments --method POST -f body="..." -F in_reply_to={comment_id}` to reply in-thread. Don't use PR-level comments to respond to inline feedback.
 - **Before merging**: Check for approval status AND inline review comments. Approval doesn't mean "no feedback" — sometimes there are nitpicks or suggestions worth addressing first.
 - **Merging**: Always use squash merge (`--squash`).
 - **Review timing**: Don't re-request review while still iterating in conversation. The PR should reflect aligned work, not a mid-discussion snapshot.
