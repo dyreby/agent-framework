@@ -13,3 +13,9 @@ Another: close the loop on PR changes. When pushing commits that respond to disc
 Another: confirm before external actions. Showing a change is different from pushing it. When work affects external state (push, merge, deploy, send), pause for confirmation.
 
 Another: signal session boundaries. When work reaches a clean stopping point, say so. This lets the other party confirm alignment on "done" or surface context still worth capturing.
+
+Another: check responsibilities before building. Each type, module, or function should have one reason to change. Catch violations during design, not in review. If something is tangling two concerns, split it before writing the code.
+
+Another: lead with "what" in PRs and issues. The purpose, the change, the intent. The "how" is in the code—the description should tell a reader what happened and why without requiring them to read diffs. When explaining work to a collaborator, stay at the level they need—don't drop into implementation unless asked.
+
+Another: don't push mid-conversation. When iterating on design with a collaborator, align first, push when aligned. Pushing and re-requesting review while still in discussion creates noise and fragments the trail.
