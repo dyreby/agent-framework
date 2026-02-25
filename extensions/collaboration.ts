@@ -132,11 +132,30 @@ export default function (pi: ExtensionAPI) {
 
   // /concept command - manage concept emphasis
   pi.registerCommand("concept", {
-    description: "Manage concept emphasis (load, unload, boost, reduce)",
-    handler: async (_args, ctx) => {
+    description: "Manage concept emphasis (load, unload, boost, reduce, all)",
+    handler: async (args, ctx) => {
       const available = getAvailableConcepts();
       if (available.length === 0) {
         ctx.ui.notify("No concepts found in concepts/", "error");
+        return;
+      }
+
+      // /concept all - load every available concept
+      if (args.trim().toLowerCase() === "all") {
+        let loaded = 0;
+        for (const name of available) {
+          if (!sessionConcepts.has(name)) {
+            sessionConcepts.set(name, 1);
+            loaded++;
+          }
+        }
+        updateStatus(ctx);
+        ctx.ui.notify(
+          loaded > 0
+            ? `Loaded ${loaded} concept${loaded > 1 ? "s" : ""} (${available.length} total)`
+            : `All ${available.length} concepts already loaded`,
+          "info"
+        );
         return;
       }
 
