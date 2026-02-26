@@ -260,6 +260,14 @@ ${conceptContents.join("\n\n---\n\n")}
   // Reset session state on session start
   pi.on("session_start", async (_event, ctx) => {
     sessionConcepts.clear();
+
+    // Spawned sessions (via workspace tool) load all concepts automatically
+    if (process.env.PI_LOAD_ALL_CONCEPTS === "1") {
+      for (const name of getAvailableConcepts()) {
+        sessionConcepts.set(name, 1);
+      }
+    }
+
     updateStatus(ctx);
   });
 
