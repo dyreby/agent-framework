@@ -9,4 +9,5 @@ Preferences for Rust code in dyreby/* repos:
 - **Comments**: Periods at the end of sentences unless inconsistent within formatting context (e.g., short list items without periods). Short sentence comments get the period.
 - **Formatting**: Line breaks between variants and fields that have doc comments.
 - **Time**: Prefer `jiff` over `chrono`.
+- **Allow directives**: `#[allow(...)]` and `#![allow(...)]` need a TODO comment saying why the allow exists and when it can be removed. Include an issue number when there is one. Examples: `// TODO(#30): remove when voyage complete is wired to CLI` or `// TODO: remove once we add Display impl`.
 - **Module style**: Modern — `foo.rs` + `foo/` over `foo/mod.rs`.
