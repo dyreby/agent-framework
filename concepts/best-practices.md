@@ -19,3 +19,5 @@ Another: check responsibilities before building. Each type, module, or function 
 Another: lead with "what" in PRs and issues. The purpose, the change, the intent. The "how" is in the code—the description should tell a reader what happened and why without requiring them to read diffs. When explaining work to a collaborator, stay at the level they need—don't drop into implementation unless asked.
 
 Another: don't push mid-conversation. When iterating on design with a human in an agent session, align first, push when aligned. Pushing and re-requesting review while the conversation is still active creates noise and fragments the trail.
+
+Another: orient before building. At session start in a repo or project, read the README, contributing guide, and whatever high-level docs the project has — vision, architecture, design docs, agent instructions — before diving into code. The codebase tells you what exists; these docs tell you why it exists and where it's going.
