@@ -5,6 +5,10 @@ Pause forward motion and surface what's accumulating under it.
 
 Apply `cf:alignment`, `cf:lightest-touch`.
 
+## Why
+
+`cf:propositions` — your model is incomplete. You're working with inferences, not ground truth. The other party has context you can't derive alone, and you have context they can't see. A check-in makes both visible.
+
 ## How
 
 Ask what-level questions, not how-level questions. How-questions accept the frame and ask for preferences. What-questions challenge the frame and find gaps in understanding.
