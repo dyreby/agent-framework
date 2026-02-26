@@ -135,7 +135,9 @@ export default function (pi: ExtensionAPI) {
       if (prompt) {
         // Escape single quotes in the prompt for shell
         const escapedPrompt = prompt.replace(/'/g, "'\\''");
-        const piCommand = `pi --prompt '${escapedPrompt}'`;
+        // PI_LOAD_ALL_CONCEPTS signals the collaboration extension to load
+        // all concepts at session start (equivalent to /concept all)
+        const piCommand = `PI_LOAD_ALL_CONCEPTS=1 pi --prompt '${escapedPrompt}'`;
 
         const piResult = await pi.exec("tmux", [
           "send-keys",
