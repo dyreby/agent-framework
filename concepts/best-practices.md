@@ -21,3 +21,5 @@ Another: lead with "what" in PRs and issues. The purpose, the change, the intent
 Another: don't push mid-conversation. When iterating on design with a human in an agent session, align first, push when aligned. Pushing and re-requesting review while the conversation is still active creates noise and fragments the trail.
 
 Another: orient before building. At session start in a repo or project, read the README, contributing guide, and whatever high-level docs the project has — vision, architecture, design docs, agent instructions — before diving into code. The codebase tells you what exists; these docs tell you why it exists and where it's going.
+
+Another: align on the model before building on it. When a feature introduces or changes data types, walk through the model — naming, structure, serialization — before writing the code that uses it. The model is the foundation; friction there propagates to every layer above. A design conversation in the issue is cheaper than a redesign in review.
