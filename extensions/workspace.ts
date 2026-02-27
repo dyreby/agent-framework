@@ -50,7 +50,7 @@ export default function (pi: ExtensionAPI) {
         description:
           'Model to use (e.g., "claude-opus-4", "claude-sonnet-4"). Must be explicitly provided by the user.',
       }),
-      thinkingLevel: Type.String({
+      thinking: Type.String({
         description:
           'Thinking level: off, minimal, low, medium, high, xhigh. Must be explicitly provided by the user.',
       }),
@@ -69,10 +69,10 @@ export default function (pi: ExtensionAPI) {
     }),
 
     async execute(_toolCallId, params, _signal) {
-      const { repo, model, thinkingLevel, context, prompt } = params as {
+      const { repo, model, thinking, context, prompt } = params as {
         repo: string;
         model: string;
-        thinkingLevel: string;
+        thinking: string;
         context?: string;
         prompt?: string;
       };
@@ -145,7 +145,7 @@ export default function (pi: ExtensionAPI) {
 
       // Build pi command with model and thinking args
       const escapedModel = model.replace(/'/g, "'\\''");
-      const escapedThinking = thinkingLevel.replace(/'/g, "'\\''");
+      const escapedThinking = thinking.replace(/'/g, "'\\''");
       const modelArgs = `--model '${escapedModel}' --thinking '${escapedThinking}'`;
 
       // Start pi with context if prompt provided
@@ -179,7 +179,7 @@ export default function (pi: ExtensionAPI) {
           content: [
             {
               type: "text",
-              text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with ${model} (thinking: ${thinkingLevel}).\n\nSwitch to that tmux window to continue.`,
+              text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with ${model} (thinking: ${thinking}).\n\nSwitch to that tmux window to continue.`,
             },
           ],
         };
@@ -211,7 +211,7 @@ export default function (pi: ExtensionAPI) {
         content: [
           {
             type: "text",
-            text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with ${model} (thinking: ${thinkingLevel}).\n\nSwitch to that tmux window to continue.`,
+            text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with ${model} (thinking: ${thinking}).\n\nSwitch to that tmux window to continue.`,
           },
         ],
       };
