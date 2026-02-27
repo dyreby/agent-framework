@@ -9,6 +9,9 @@
  * work from anywhere. Identity is always determined by cwd.
  */
 
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { Type } from "@sinclair/typebox";
 import { DynamicBorder } from "@mariozechner/pi-coding-agent";
 import type {
@@ -122,6 +125,46 @@ function extractFlag(command: string, flag: string): string | undefined {
  */
 function hasFlag(command: string, flag: string): boolean {
   return new RegExp(`--${flag}(?:\\s|$)`).test(command);
+}
+
+/**
+ * Remove a value-taking flag and its argument from a command string.
+ * Handles double-quoted, single-quoted, and unquoted values.
+ */
+function removeFlagWithValue(command: string, flag: string): string {
+  const pattern = new RegExp(
+    `\\s*--${flag}\\s+(?:"(?:[^"\\\\]|\\\\.)*"|'(?:[^'\\\\]|\\\\.)*'|\\S+)`
+  );
+  return command.replace(pattern, "");
+}
+
+/**
+ * Rewrite --body <value> to --body-file <tmpfile> to avoid shell escaping
+ * issues with special characters, quotes, and JSON in body content.
+ *
+ * Returns the (possibly rewritten) command and a cleanup function to remove
+ * the tmp file when done.
+ */
+async function rewriteBodyToFile(
+  command: string
+): Promise<{ command: string; cleanup: () => Promise<void> }> {
+  const body = extractFlag(command, "body");
+  if (body === undefined) {
+    return { command, cleanup: async () => {} };
+  }
+
+  const dir = await mkdtemp(join(tmpdir(), "pi-gh-"));
+  const tmpFile = join(dir, "body.txt");
+  await writeFile(tmpFile, body, "utf8");
+
+  const rewritten = removeFlagWithValue(command, "body") + ` --body-file "${tmpFile}"`;
+
+  return {
+    command: rewritten,
+    cleanup: async () => {
+      await rm(dir, { recursive: true, force: true });
+    },
+  };
 }
 
 /**
@@ -562,10 +605,18 @@ export function createGithubTool(ctx: GhToolContext): ToolDefinition {
         }
       }
 
-      // Execute with the appropriate GH_CONFIG_DIR
-      const fullCommand = `GH_CONFIG_DIR="${configDir}" gh ${command}`;
+      // Rewrite --body to --body-file to avoid shell escaping issues
+      const { command: safeCommand, cleanup } = await rewriteBodyToFile(command);
 
-      const result = await pi.exec("bash", ["-c", fullCommand], { signal });
+      // Execute with the appropriate GH_CONFIG_DIR
+      const fullCommand = `GH_CONFIG_DIR="${configDir}" gh ${safeCommand}`;
+
+      let result: Awaited<ReturnType<typeof pi.exec>>;
+      try {
+        result = await pi.exec("bash", ["-c", fullCommand], { signal });
+      } finally {
+        await cleanup();
+      }
 
       const output = [result.stdout, result.stderr]
         .filter(Boolean)
