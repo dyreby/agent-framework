@@ -43,8 +43,7 @@ export default function (pi: ExtensionAPI) {
       "Use this to switch context from discovery to focused work on a repo. " +
       'Use "provider/model" format for the model parameter (e.g., "anthropic/claude-opus-4") ' +
       "to avoid ambiguity when the same model name exists across providers. " +
-      "Valid models: anthropic/claude-sonnet-4-6, anthropic/claude-opus-4-6, " +
-      "anthropic/claude-sonnet-4-5, anthropic/claude-opus-4-5. " +
+      "Valid models: anthropic/claude-sonnet-4-6, anthropic/claude-opus-4-6. " +
       "Model and thinking level must be agreed with the user before calling — " +
       "suggest if asked, but never assume. The user confirms.",
     parameters: Type.Object({
