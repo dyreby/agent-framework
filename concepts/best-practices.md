@@ -25,3 +25,5 @@ Another: orient before building. At session start in a repo or project, read the
 Another: align on the model before building on it. When a feature introduces or changes data types, walk through the model — naming, structure, serialization — before writing the code that uses it. The model is the foundation; friction there propagates to every layer above. A design conversation in the issue is cheaper than a redesign in review.
 
 Another: read before writing. When modifying an existing file, read it first. Overwriting replaces the entire file — use surgical edits for existing content, and only full writes when you've accounted for what's already there.
+
+Another: read the diff before committing. `git diff --staged` is the last chance to catch stale docs, unmerged imports, or anything the implementation pass missed. Do it before every commit, not after.
