@@ -44,6 +44,14 @@ export default function (pi: ExtensionAPI) {
         description:
           'Repository in "owner/repo" format (e.g., "dyreby/collaboration-framework")',
       }),
+      model: Type.String({
+        description:
+          'Model to use (e.g., "claude-opus-4", "claude-sonnet-4"). Must be explicitly provided by the user.',
+      }),
+      thinkingLevel: Type.String({
+        description:
+          'Thinking level: off, minimal, low, medium, high, xhigh. Must be explicitly provided by the user.',
+      }),
       context: Type.Optional(
         Type.String({
           description:
@@ -59,8 +67,10 @@ export default function (pi: ExtensionAPI) {
     }),
 
     async execute(_toolCallId, params, _signal) {
-      const { repo, context, prompt } = params as {
+      const { repo, model, thinkingLevel, context, prompt } = params as {
         repo: string;
+        model: string;
+        thinkingLevel: string;
         context?: string;
         prompt?: string;
       };
@@ -131,13 +141,18 @@ export default function (pi: ExtensionAPI) {
         };
       }
 
+      // Build pi command with model and thinking args
+      const escapedModel = model.replace(/'/g, "'\\''");
+      const escapedThinking = thinkingLevel.replace(/'/g, "'\\''");
+      const modelArgs = `--model '${escapedModel}' --thinking '${escapedThinking}'`;
+
       // Start pi with context if prompt provided
       if (prompt) {
         // Escape single quotes in the prompt for shell
         const escapedPrompt = prompt.replace(/'/g, "'\\''");
         // PI_LOAD_ALL_CONCEPTS signals the collaboration extension to load
         // all concepts at session start (equivalent to /concept all)
-        const piCommand = `PI_LOAD_ALL_CONCEPTS=1 pi --prompt '${escapedPrompt}'`;
+        const piCommand = `PI_LOAD_ALL_CONCEPTS=1 pi ${modelArgs} --prompt '${escapedPrompt}'`;
 
         const piResult = await pi.exec("tmux", [
           "send-keys",
@@ -162,7 +177,29 @@ export default function (pi: ExtensionAPI) {
           content: [
             {
               type: "text",
-              text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with context.\n\nSwitch to that tmux window to continue.`,
+              text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with ${model} (thinking: ${thinkingLevel}).\n\nSwitch to that tmux window to continue.`,
+            },
+          ],
+        };
+      }
+
+      // No prompt — start pi with just model/thinking args
+      const piCommandNoPrompt = `PI_LOAD_ALL_CONCEPTS=1 pi ${modelArgs}`;
+
+      const piResultNoPrompt = await pi.exec("tmux", [
+        "send-keys",
+        "-t",
+        windowName,
+        piCommandNoPrompt,
+        "Enter",
+      ]);
+
+      if (piResultNoPrompt.code !== 0) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Opened workspace but failed to start pi: ${piResultNoPrompt.stderr}\nWindow: ${windowName}\nPath: ${repoPath}`,
             },
           ],
         };
@@ -172,7 +209,7 @@ export default function (pi: ExtensionAPI) {
         content: [
           {
             type: "text",
-            text: `Opened workspace: ${windowName}\nPath: ${repoPath}\n\nSwitch to that tmux window to continue work there.`,
+            text: `Opened workspace: ${windowName}\nPath: ${repoPath}\nStarted pi with ${model} (thinking: ${thinkingLevel}).\n\nSwitch to that tmux window to continue.`,
           },
         ],
       };
