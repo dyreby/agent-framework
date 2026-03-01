@@ -14,6 +14,9 @@ Alignment at each level encapsulates the work below it.
 
 ## How to use this
 
+CE tells you where to point the OODA loop.
+When friction appears, observe the level, orient on whether the *what* is shared, decide whether to align or act, and proceed.
+
 **Before acting, check: is the *what* at my level shared?**
 If yes, the *how* is yours — work independently.
 If not, align on the *what* first. Don't solve the *how* of a *what* that isn't settled.
